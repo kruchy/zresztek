@@ -6,7 +6,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
 import knownIngredients from "./ingredients";
-import Image from "./img/chef.png";
+import Image from "./img/chef.jpg";
 
 const StyledAutocomplete = styled(Autocomplete)`
   width: 500px;
