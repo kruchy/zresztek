@@ -1,0 +1,45 @@
+.App {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.select-ingredients {
+  margin-bottom: 20px;
+}
+
+button {
+  display: inline-block;
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0069d9;
+}
+
+.recipes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.recipe {
+  width: 30%;
+  margin-bottom: 20px;
+}
+
+.recipe img {
+  width: 100%;
+  height: auto;
+}
+
+.recipe-text {
+  padding: 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+}
