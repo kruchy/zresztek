@@ -1,16 +1,16 @@
 require("dotenv").config();
-import express, { json } from "express";
-import { post } from "axios";
-import cors from "cors";
+const axios = require("axios");
 
-const app = express();
-app.use(cors());
-app.use(json());
-
-export async function generateRecipesHandler(req, res) {
-  const ingredients = req.body.ingredients;
+export default async function prepareRecipesHandler(req, res) {
+  
+  if(req.body && req.body.ingredients.length === 0){
+    throw new Error('Ingredients are empty');
+  }
+  
   try {
-    const response = await post(
+    const ingredients = req.body.ingredients;
+    
+    const response = await axios.post(
       "https://api.openai.com/v1/completions",
       {
         model: "gpt-4",
@@ -44,15 +44,9 @@ export async function generateRecipesHandler(req, res) {
       };
     });
 
-    res.json(generatedRecipes);
+    res.status(200).json(generatedRecipes);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to generate recipes" , error});
   }
 }
-
-app.post("/generateRecipes", generateRecipesHandler);
-
-export const server = app.listen(3001, () => {
-  console.log("Server listening on port 3001");
-});
