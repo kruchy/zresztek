@@ -26,7 +26,7 @@ function App() {
 
   const handleSearchRecipes = async () => {
     try {
-      const response = await fetch(`${process.env.API_PATH}/generateRecipes`, {
+      const response = await fetch(`${process.env.REACT_APP_API_PATH}/generateRecipes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
