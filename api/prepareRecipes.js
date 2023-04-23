@@ -3,8 +3,8 @@ const axios = require("axios");
 
 export default async function prepareRecipesHandler(req, res) {
   try {
-    if(req.body && req.body.ingredients.length === 0){
-      throw new Error('Ingredients are empty');
+    if (req.body && req.body.ingredients.length === 0) {
+      throw new Error("Ingredients are empty");
     }
     
     
