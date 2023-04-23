@@ -6,10 +6,9 @@ export default async function prepareRecipesHandler(req, res) {
     if (req.body && req.body.ingredients.length === 0) {
       throw new Error("Ingredients are empty");
     }
-    
-    
+
     const ingredients = req.body.ingredients;
-    
+
     const response = await axios.post(
       "https://api.openai.com/v1/completions",
       {
@@ -45,7 +44,17 @@ export default async function prepareRecipesHandler(req, res) {
 
     res.status(200).json(generatedRecipes);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to generate recipes" , error});
+    let errorContent = error;
+
+    if (error.response) {
+      errorContent = error.response.data.error.message;
+    }
+
+    console.error(errorContent);
+
+    res.status(500).json({
+      message: "Failed to generate recipes",
+      error: errorContent,
+    });
   }
 }
