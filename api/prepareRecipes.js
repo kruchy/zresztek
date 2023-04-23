@@ -2,12 +2,12 @@ require("dotenv").config();
 const axios = require("axios");
 
 export default async function prepareRecipesHandler(req, res) {
-  
-  if(req.body && req.body.ingredients.length === 0){
-    throw new Error('Ingredients are empty');
-  }
-  
   try {
+    if(req.body && req.body.ingredients.length === 0){
+      throw new Error('Ingredients are empty');
+    }
+    
+    
     const ingredients = req.body.ingredients;
     
     const response = await axios.post(
