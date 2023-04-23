@@ -13,7 +13,8 @@ export default async function prepareRecipesHandler(req, res) {
     const response = await axios.post(
       "https://api.openai.com/v1/completions",
       {
-        model: "gpt-4",
+        model: "gpt-3.5-turbo",
+        role: "system",
         prompt: `${process.env.RECIPE_PROMPT}: ${ingredients.join(
           ", "
         )}`,
