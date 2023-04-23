@@ -15,9 +15,7 @@ export default async function prepareRecipesHandler(req, res) {
       {
         model: "gpt-3.5-turbo",
         role: "system",
-        prompt: `${process.env.RECIPE_PROMPT}: ${ingredients.join(
-          ", "
-        )}`,
+        prompt: `${process.env.RECIPE_PROMPT} ${ingredients.join(", ")}`,
         max_tokens: 3000,
         n: 3,
         stop: null,
