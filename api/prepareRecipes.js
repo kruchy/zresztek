@@ -9,15 +9,15 @@ app.use(json());
 
 export async function generateRecipesHandler(req, res) {
   const ingredients = req.body.ingredients;
-
   try {
     const response = await post(
-      "https://api.openai.com/v1/engines/davinci-codex/completions",
+      "https://api.openai.com/v1/completions",
       {
-        prompt: `Generate recipes using the following ingredients: ${ingredients.join(
+        model: "gpt-4",
+        prompt: `${process.env.RECIPE_PROMPT}: ${ingredients.join(
           ", "
         )}`,
-        max_tokens: 300,
+        max_tokens: 3000,
         n: 3,
         stop: null,
         temperature: 0.7,
@@ -47,7 +47,7 @@ export async function generateRecipesHandler(req, res) {
     res.json(generatedRecipes);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Failed to generate recipes" });
+    res.status(500).json({ message: "Failed to generate recipes" , error});
   }
 }
 
