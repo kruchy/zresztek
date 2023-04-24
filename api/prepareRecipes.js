@@ -25,11 +25,10 @@ async function createChatCompletion(messages, options = {}) {
 
 module.exports =  async function prepareRecipesHandler(req, res) {
   try {
-    if (req.body && req.body.ingredients.length === 0) {
-      throw new Error("Ingredients are empty");
+    if(req.body && req.body.ingredients.length === 0){
+      throw new Error('Ingredients are empty');
     }
     const ingredients = req.body.ingredients;
-
     
 
     // const messages = [
@@ -44,14 +43,15 @@ module.exports =  async function prepareRecipesHandler(req, res) {
     // const choices = await createChatCompletion(messages, options);
 
     const response = await axios.post(
-      "https://api.openai.com/v1/completions",
+      "https://api.openai.com/v1/chat/completions",
       {
         model: "gpt-3.5-turbo",
-        role: "system",
-        prompt: `${process.env.RECIPE_PROMPT} ${ingredients.join(", ")}`,
+        messages: [
+          {content: `${process.env.RECIPE_PROMPT}: ${ingredients.join(", ")}`,
+          role: "system"}
+        ],
         max_tokens: 3000,
-        n: 3,
-        stop: null,
+        n: 1,
         temperature: 0.7,
       },
       {
@@ -62,6 +62,7 @@ module.exports =  async function prepareRecipesHandler(req, res) {
       }
     );
 
+    console.log(JSON.stringify(response))
     const generatedRecipes = response.choices[0].message.content.map((choice) => {
       const recipe = choice.recipe;
       const title = choice.title;
@@ -77,20 +78,8 @@ module.exports =  async function prepareRecipesHandler(req, res) {
 
     res.status(200).json(generatedRecipes);
   } catch (error) {
-
-    let errorContent = error;
-
-    if (error.response) {
-      errorContent = error.response.data.error.message;
-    }
-
-    console.error(errorContent);
-
-    res.status(500).json({
-      message: "Failed to generate recipes",
-      error: errorContent,
-    });
-
+    console.error(error);
+    res.status(500).json({ message: "Failed to generate recipes"});
   }
 }
 
