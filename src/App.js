@@ -2,15 +2,30 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
+import { styled } from "@mui/system";
+import knownIngredients from "./ingredients";
 
-const knownIngredients = [
-  "jajko",
-  "mąka",
-  "cukier",
-  "sól",
-  "pieprz",
-  // Dodaj więcej znanych składników tutaj...
-];
+
+const StyledAutocomplete = styled(Autocomplete)`
+  width: 500px;
+`;
+
+const StyledTextField = styled(TextField)`
+  width: 100%;
+`;
+
+const Logo = styled(Box)`
+  background-image: url(${Image});
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 600px;
+  height: 400px;
+  margin: 20px auto;
+`;
+
 
 function App() {
   const [ingredients, setIngredients] = useState([]);
@@ -55,12 +70,12 @@ function App() {
       )}
       <h1>RecipeMan</h1>
       <div className="search-container">
-        <Autocomplete
+        <StyledAutocomplete
           multiple
           options={knownIngredients}
           onChange={(event, value) => setIngredients(value)}
           renderInput={(params) => (
-            <TextField
+            <StyledTextField
               {...params}
               variant="outlined"
               label="Wprowadź składniki"

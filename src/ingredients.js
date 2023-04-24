@@ -39,7 +39,6 @@ const knownIngredients = [
   "gruszka",
   "truskawka",
   "malina",
-  "śliwka",
   "pomarańcza",
   "cytryna",
   "limonka",
@@ -80,6 +79,5 @@ const knownIngredients = [
   "kokos",
   "śliwka",
   "grapefruit",
-  "śliwka"
 ];
 export default knownIngredients;
