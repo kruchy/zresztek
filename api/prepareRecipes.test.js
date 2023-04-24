@@ -18,47 +18,43 @@ describe("Server API", () => {
 
   it("generateRecipes returns proper recipes for given API response", async () => {
     const sampleIngredients = ["pomidory", "jajka", "sałata"];
-    const sampleRecipes = [
-      {
-        title: "Sałatka z pomidorów",
-        recipe: "1. Umyj i osusz pomidory. 2. Pokrój pomidory na plasterki. 3. Ułóż plasterki pomidorów na talerzu.",
-        ingredients: { "pomidory": "200 g" },
-        image: "https://via.placeholder.com/150"
-      },
-      {
-        title: "Sałatka z pomidorów i jajek",
-        recipe: "1. Umyj i osusz sałatę oraz pomidory. 2. Pokrój sałatę na mniejsze kawałki, pomidory na plasterki. 3. Ugotuj jajka na twardo, obierz i pokrój w plasterki. 4. Ułóż sałatę, pomidory i jajka na talerzu.",
-        ingredients: { "sałata": "100 g", "pomidory": "200 g", "jajka": "2 sztuki" },
-        image: "https://via.placeholder.com/150"
-      },
-      {
-        title: "Sałatka z pomidorów, jajek i sera feta",
-        recipe: "1. Umyj i osusz sałatę oraz pomidory. 2. Pokrój sałatę na mniejsze kawałki, pomidory na plasterki. 3. Ugotuj jajka na twardo, obierz i pokrój w plasterki. 4. Pokrój ser feta na kostki. 5. Ułóż sałatę, pomidory, jajka i ser feta na talerzu.",
-        ingredients: { "sałata": "100 g", "pomidory": "200 g", "jajka": "2 sztuki", "ser feta": "50 g" },
-        image: "https://via.placeholder.com/150"
-      },
-    ];
+    const sampleRecipes = "[\n{\n\"title\": \"Title 1\",\n\"recipe\": \"Recipe 1\",\n\"ingredients\": [\n{\"ingredient\": \"Ingredient 1\", \"quantity\": \"500g\"},\n{\"ingredient\": \"ingredient 2\", \"quantity\": \"1 łyżeczka\"}\n]\n},\n{\n\"title\": \"Title 2\",\n\"recipe\": \"Recipe 2\",\n\"ingredients\": [\n{\"ingredient\": \"Ingredient 1\", \"quantity\": \"500g\"},\n{\"ingredient\": \"ingredient 2\", \"quantity\": \"1 łyżeczka\"}\n]\n},{\n\"title\": \"Title 3\",\n\"recipe\": \"Recipe 3\",\n\"ingredients\": [\n{\"ingredient\": \"Ingredient 1\", \"quantity\": \"500g\"},\n{\"ingredient\": \"ingredient 2\", \"quantity\": \"1 łyżeczka\"}\n]\n}\n]";
   
     axios.post.mockResolvedValue({
-        choices: [
-          {
-            message: {
-              role: 'assistant',
-              content: sampleRecipes
-            },
-            finish_reason: 'stop',
-            index: 0
-          }
-        ]
+        data: {
+          choices: [
+            {
+              message: {
+                role: 'assistant',
+                content: sampleRecipes
+              },
+              finish_reason: 'stop',
+              index: 0
+            }
+          ]
+        }
     });
   
+    const expectedRecipes = JSON.parse(sampleRecipes).map((choice) => {
+      const recipe = choice.recipe;
+      const title = choice.title;
+      const ingredients = choice.ingredients;
+      const image = "https://via.placeholder.com/150";
+      return {
+        title,
+        recipe,
+        ingredients,
+        image
+      };
+    });
+
     const res = await request(app)
       .post("/prepareRecipes")
       .send({ ingredients: sampleIngredients })
       .expect("Content-Type", /json/)
       .expect(200);
   
-    expect(res.body).toEqual(sampleRecipes);
+    expect(res.body).toEqual(expectedRecipes);
   });
   
 

@@ -62,8 +62,7 @@ module.exports =  async function prepareRecipesHandler(req, res) {
       }
     );
 
-    console.log(JSON.stringify(response))
-    const generatedRecipes = response.choices[0].message.content.map((choice) => {
+    const generatedRecipes = JSON.parse(response.data.choices[0].message.content).map((choice) => {
       const recipe = choice.recipe;
       const title = choice.title;
       const ingredients = choice.ingredients;
