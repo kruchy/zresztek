@@ -8,6 +8,12 @@
   margin-bottom: 20px;
 }
 
+.search-container {
+  display: flex;
+  justify-content: center
+}
+
+
 button {
   display: inline-block;
   background-color: #007bff;

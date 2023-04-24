@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
 import knownIngredients from "./ingredients";
+import CircularProgress from "@mui/material/CircularProgress";
+import Image from "./img/chef.jpg"
 
 
 const StyledAutocomplete = styled(Autocomplete)`
@@ -27,10 +28,13 @@ const Logo = styled(Box)`
 `;
 
 
+
+
 function App() {
   const [ingredients, setIngredients] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (error) {
@@ -40,6 +44,7 @@ function App() {
   }, [error]);
 
   const handleSearchRecipes = async () => {
+    setLoading(true);
     try {
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/prepareRecipes`, {
         method: "POST",
@@ -58,17 +63,19 @@ function App() {
     } catch (error) {
       console.error(error);
       setError("Wystąpił chwilowy błąd. Spróbuj ponownie później.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="App">
+      <Logo data-testid="Logo" />
       {error && (
         <div className="error-notification" style={notificationStyle}>
           {error}
         </div>
       )}
-      <h1>RecipeMan</h1>
       <div className="search-container">
         <StyledAutocomplete
           multiple
@@ -84,13 +91,25 @@ function App() {
         />
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
       </div>
-      <div className="recipes-container">
+      {loading && (
+        <div className="spinner-container" style={spinnerContainerStyle}>
+          <CircularProgress />
+        </div>
+      )}
+      <div className="recipes-container" style={recipesContainerStyle}>
         {recipes.map((recipe, index) => (
-          <div key={index} className="recipe">
+          <div key={index} className="recipe" style={recipeStyle}>
             <img src={recipe.image} alt={recipe.title} />
             <div>
               <h2>{recipe.title}</h2>
-              <p>{recipe.description}</p>
+              <p>{recipe.recipe}</p>
+              <ul>
+                {recipe.ingredients.map((ingredient, i) => (
+                  <li key={i}>
+                    {ingredient.ingredient}: {ingredient.quantity}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         ))}
@@ -98,6 +117,25 @@ function App() {
     </div>
   );
 }
+
+const recipesContainerStyle = {
+  display: "flex",
+  flexDirection: "row",
+  flexWrap: "wrap",
+  justifyContent: "center",
+};
+
+const recipeStyle = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  margin: "20px",
+  width: "40%",
+  border: "1px solid #ccc",
+  borderRadius: "5px",
+  padding: "15px",
+  backgroundColor: "white",
+};
 
 const notificationStyle = {
   position: "fixed",
@@ -109,5 +147,13 @@ const notificationStyle = {
   zIndex: 1000,
   color: "white",
 };
+
+const spinnerContainerStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: "20px",
+};
+
 
 export default App;

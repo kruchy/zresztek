@@ -9,7 +9,7 @@ describe("App", () => {
     act(() => {
       render(<App />);
     });
-    const headerElement = screen.getByText(/RecipeMan/i);
+    const headerElement = screen.getByTestId(/Logo/i);
     expect(headerElement).toBeInTheDocument();
   });
 
@@ -34,23 +34,50 @@ describe("App", () => {
   });
 
   test("renders recipes when request is successful", async () => {
-    const mockRecipes = [
+    const mockRecipes =  [
       {
-        title: "Recipe 1",
-        image: "https://via.placeholder.com/150",
-        description: "A delicious recipe using ingredients 1, 2, and 3.",
+          "title": "Title 1",
+          "recipe": "Recipe 1",
+          "ingredients": [
+              {
+                  "ingredient": "ingredient1",
+                  "quantity": "150g"
+              },
+              {
+                  "ingredient": "ingredient2",
+                  "quantity": "1 łyżeczka"
+              }
+          ]
       },
       {
-        title: "Recipe 2",
-        image: "https://via.placeholder.com/150",
-        description: "A fantastic recipe using ingredients 1, 4, and 5.",
+          "title": "Title 2",
+          "recipe": "Recipe 2",
+          "ingredients": [
+              {
+                  "ingredient": "ingredient1",
+                  "quantity": "150g"
+              },
+              {
+                  "ingredient": "ingredient2",
+                  "quantity": "1 łyżeczka"
+              }
+          ]
       },
       {
-        title: "Recipe 3",
-        image: "https://via.placeholder.com/150",
-        description: "An amazing recipe using ingredients 2, 3, and 6.",
-      },
-    ];
+          "title": "Title 3",
+          "recipe": "Recipe 3",
+          "ingredients": [
+              {
+                  "ingredient": "ingredient1",
+                  "quantity": "150g"
+              },
+              {
+                  "ingredient": "ingredient2",
+                  "quantity": "1 łyżeczka"
+              }
+          ]
+      }
+  ];
 
     jest.spyOn(global, "fetch").mockImplementation(() =>
       Promise.resolve({
