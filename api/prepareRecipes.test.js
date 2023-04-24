@@ -1,29 +1,26 @@
-// server.test.js
 import axios from "axios";
-import request from "supertest";
-import express from "express";
-import cors from "cors";
-import { json } from "express";
-import { post } from "axios";
-import { generateRecipesHandler, server } from "./server";
+import prepareRecipes from "./prepareRecipes";
 jest.mock("axios");
 
 describe("Server API", () => {
-  let app;
-
-  beforeEach(() => {
-    app = express();
-    app.use(cors());
-    app.use(json());
-    app.post("/generateRecipes", generateRecipesHandler);
-  });
-
-  afterEach(() => {
-    server.close();
-  });
-
   it("generateRecipes returns generated recipes", async () => {
     const sampleIngredients = ["potatoes", "onions", "carrots"];
+
+    const json = jest.fn();
+    const status = jest.fn().mockImplementation(() => ({
+      json,
+    }));
+    const reqMock = {
+      body: {
+        ingredients: sampleIngredients,
+      },
+    };
+
+    const resMock = {
+      status,
+      json,
+    };
+
     const sampleRecipes = [
       {
         title: "Potato Soup",
@@ -46,27 +43,43 @@ describe("Server API", () => {
       },
     });
 
-    const res = await request(app)
-      .post("/generateRecipes")
-      .send({ ingredients: sampleIngredients })
-      .expect("Content-Type", /json/)
-      .expect(200);
+    await prepareRecipes(reqMock, resMock);
 
-    expect(res.body).toEqual(sampleRecipes);
+    expect(json).toBeCalledTimes(1);
+    expect(json).toBeCalledWith(sampleRecipes);
+    expect(status).toBeCalledTimes(1);
+    expect(status).toBeCalledWith(200);
   });
 
   it("generateRecipes returns 500 when API request fails", async () => {
     const sampleIngredients = ["potatoes", "onions", "carrots"];
     const errorMessage = "Failed to generate recipes";
 
+    const json = jest.fn();
+    const status = jest.fn().mockImplementation(() => ({
+      json,
+    }));
+    const reqMock = {
+      body: {
+        ingredients: sampleIngredients,
+      },
+    };
+
+    const resMock = {
+      status,
+      json,
+    };
+
     axios.post.mockRejectedValue(new Error(errorMessage));
 
-    const res = await request(app)
-      .post("/generateRecipes")
-      .send({ ingredients: sampleIngredients })
-      .expect("Content-Type", /json/)
-      .expect(500);
+    await prepareRecipes(reqMock, resMock);
 
-    expect(res.body).toEqual({ message: errorMessage });
+    expect(json).toBeCalledTimes(1);
+    expect(json).toBeCalledWith({
+      message: "Failed to generate recipes",
+      error: new Error("Failed to generate recipes"),
+    });
+    expect(status).toBeCalledTimes(1);
+    expect(status).toBeCalledWith(500);
   });
 });
