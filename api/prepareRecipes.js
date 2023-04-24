@@ -11,7 +11,6 @@ const openai = axios.create({
   },
 });
 
-console.log(process.env.DEV_ENABLED)
 
 async function createChatCompletion(messages, options = {}) {
   try {
@@ -46,7 +45,8 @@ module.exports =  async function prepareRecipesHandler(req, res) {
 
     // const choices = await createChatCompletion(messages, options);
 
-    const response = process.env.DEV_ENABLED ? { data: devResponse } : await axios.post(
+    const isDev = process.env.DEV_ENABLED === "true"
+    const response = isDev ? { data: devResponse } : await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
         model: "gpt-3.5-turbo",
@@ -66,7 +66,7 @@ module.exports =  async function prepareRecipesHandler(req, res) {
       }
     );
 
-    const resultResponse = process.env.DEV_ENABLED ? response.data.choices[0].message.content : JSON.parse(response.data.choices[0].message.content) 
+    const resultResponse = isDev ? response.data.choices[0].message.content : JSON.parse(response.data.choices[0].message.content) 
 
     const generatedRecipes = resultResponse.map((choice) => {
       const recipe = choice.recipe;
