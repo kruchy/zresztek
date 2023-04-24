@@ -25,10 +25,11 @@ async function createChatCompletion(messages, options = {}) {
 
 module.exports =  async function prepareRecipesHandler(req, res) {
   try {
-    if(req.body && req.body.ingredients.length === 0){
-      throw new Error('Ingredients are empty');
+    if (req.body && req.body.ingredients.length === 0) {
+      throw new Error("Ingredients are empty");
     }
     const ingredients = req.body.ingredients;
+
     
 
     // const messages = [
@@ -47,9 +48,7 @@ module.exports =  async function prepareRecipesHandler(req, res) {
       {
         model: "gpt-3.5-turbo",
         role: "system",
-        prompt: `${process.env.RECIPE_PROMPT}: ${ingredients.join(
-          ", "
-        )}`,
+        prompt: `${process.env.RECIPE_PROMPT} ${ingredients.join(", ")}`,
         max_tokens: 3000,
         n: 3,
         stop: null,
@@ -78,8 +77,20 @@ module.exports =  async function prepareRecipesHandler(req, res) {
 
     res.status(200).json(generatedRecipes);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to generate recipes"});
+
+    let errorContent = error;
+
+    if (error.response) {
+      errorContent = error.response.data.error.message;
+    }
+
+    console.error(errorContent);
+
+    res.status(500).json({
+      message: "Failed to generate recipes",
+      error: errorContent,
+    });
+
   }
 }
 
