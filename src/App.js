@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import { styled } from "@mui/system";
 import knownIngredients from "./ingredients";
 import CircularProgress from "@mui/material/CircularProgress";
-import Image from "./img/chef.jpg"
+import Image from "./img/cover.png"
 
 
 const StyledAutocomplete = styled(Autocomplete)`
@@ -22,9 +22,9 @@ const Logo = styled(Box)`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  width: 600px;
-  height: 400px;
-  margin: 20px auto;
+  width: 500px;
+  height: 200px;
+  margin: 10px auto;
 `;
 
 
