@@ -39,12 +39,10 @@ describe("Server API", () => {
       const recipe = choice.recipe;
       const title = choice.title;
       const ingredients = choice.ingredients;
-      const image = "https://via.placeholder.com/150";
       return {
         title,
         recipe,
-        ingredients,
-        image
+        ingredients
       };
     });
 

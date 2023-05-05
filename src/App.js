@@ -99,10 +99,13 @@ function App() {
       <div className="recipes-container" style={recipesContainerStyle}>
         {recipes.map((recipe, index) => (
           <div key={index} className="recipe" style={recipeStyle}>
-            <img src={recipe.image} alt={recipe.title} />
             <div>
               <h2>{recipe.title}</h2>
-              <p>{recipe.recipe}</p>
+              <div>
+                {recipe.recipe.map((step, stepIndex) => (
+                  <p key={stepIndex}>{step}</p>
+                ))}
+              </div>
               <ul>
                 {recipe.ingredients.map((ingredient, i) => (
                   <li key={i}>

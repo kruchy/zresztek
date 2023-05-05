@@ -37,7 +37,7 @@ describe("App", () => {
     const mockRecipes =  [
       {
           "title": "Title 1",
-          "recipe": "Recipe 1",
+          "recipe": ["Recipe 1"],
           "ingredients": [
               {
                   "ingredient": "ingredient1",
@@ -51,7 +51,7 @@ describe("App", () => {
       },
       {
           "title": "Title 2",
-          "recipe": "Recipe 2",
+          "recipe": ["Recipe 2"],
           "ingredients": [
               {
                   "ingredient": "ingredient1",
@@ -65,7 +65,7 @@ describe("App", () => {
       },
       {
           "title": "Title 3",
-          "recipe": "Recipe 3",
+          "recipe": ["Recipe 3"],
           "ingredients": [
               {
                   "ingredient": "ingredient1",

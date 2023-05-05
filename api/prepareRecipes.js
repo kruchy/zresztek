@@ -72,12 +72,10 @@ module.exports =  async function prepareRecipesHandler(req, res) {
       const recipe = choice.recipe;
       const title = choice.title;
       const ingredients = choice.ingredients;
-      const image = "https://via.placeholder.com/150"
       return {
         title,
         recipe,
-        ingredients,
-        image
+        ingredients
       };
     });
 
@@ -87,5 +85,3 @@ module.exports =  async function prepareRecipesHandler(req, res) {
     res.status(500).json({ message: "Failed to generate recipes"});
   }
 }
-
-
