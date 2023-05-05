@@ -1,5 +1,5 @@
 require("dotenv").config();
-const { default: knownIngredients } = require("./ingredients");
+const knownIngredients = require("./ingredients");
 const devResponse = require("./response.json");
 
 const axios = require("axios");
@@ -8,9 +8,11 @@ const openai = axios.create({
   baseURL: "https://api.openai.com/v1",
   headers: {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
   },
 });
+
+const isProduction = process.env.NODE_ENV === "production";
 
 async function createChatCompletion(messages, options = {}) {
   try {
@@ -56,12 +58,13 @@ module.exports = async function prepareRecipesHandler(req, res) {
       n: 1,
     };
 
-    const isDev = process.env.DEV_ENABLED === "true";
-    const choices = isDev
-      ? devResponse.choices
-      : await createChatCompletion(messages, options);
+    const choices = isProduction
+      ? await createChatCompletion(messages, options)
+      : devResponse.choices;
 
-    const resultResponse = JSON.parse(choices[0].message.content);
+    const resultResponse = isProduction
+      ? JSON.parse(choices[0].message.content)
+      : choices[0].message.content;
 
     const generatedRecipes = resultResponse.map((choice) => {
       const recipe = choice.recipe;

@@ -26,11 +26,21 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install dependencies
+      - name: Install dependencies [BACKEND]
         run: npm ci
+        working-directory: ./backend
 
-      - name: Run tests
+      - name: Run tests [BACKEND]
         run: npm test
+        working-directory: ./backend
+
+      - name: Install dependencies [FRONTEND]
+        run: npm ci
+        working-directory: ./frontend
+
+      - name: Run tests [FRONTEND]
+        run: npm test
+        working-directory: ./frontend
 
       # - uses: actions/checkout@v2
       # - name: Install Vercel CLI
