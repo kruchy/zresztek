@@ -2,12 +2,14 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+COPY backend/package*.json ./
 
-RUN npm ci --only=production
+RUN npm ci
 
-COPY . .
+COPY backend .
+
+RUN npm install -g pm2
 
 EXPOSE 4000
 
-CMD ["npm", "start"]
+CMD ["pm2-runtime", "server.js"]
