@@ -1,5 +1,5 @@
 require("dotenv").config();
-const knownIngredients = require("./ingredients");
+const { default: knownIngredients } = require("./ingredients");
 const devResponse = require("./response.json");
 
 const axios = require("axios");

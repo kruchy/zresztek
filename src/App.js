@@ -37,6 +37,13 @@ function App() {
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [timer, setTimer] = useState(0);
+  
+  const startTimer = () => {
+    return setInterval(() => {
+      setTimer((prevTimer) => prevTimer + 1);
+    }, 1000);
+  };
 
   useEffect(() => {
     if (error) {
@@ -47,6 +54,7 @@ function App() {
 
   const handleSearchRecipes = async () => {
     setLoading(true);
+    const timerInterval = startTimer(); 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/prepareRecipes`, {
         method: "POST",
@@ -67,6 +75,8 @@ function App() {
       setError("Wystąpił chwilowy błąd. Spróbuj ponownie później.");
     } finally {
       setLoading(false);
+      clearInterval(timerInterval); 
+      setTimer(0); 
     }
   };
 
@@ -96,6 +106,14 @@ function App() {
       {loading && (
         <div className="spinner-container" style={spinnerContainerStyle}>
           <CircularProgress />
+          <div className="timer" style={timerStyle}>
+            Czas oczekiwania: {timer} sekund
+          </div>
+          {timer >= 20 && (
+            <div className="wait-message" style={waitMessageStyle}>
+              To może potrwać, ale będzie warto!
+            </div>
+          )}
         </div>
       )}
       <div className="recipes-container" style={recipesContainerStyle}>
@@ -162,5 +180,15 @@ const spinnerContainerStyle = {
   marginTop: "20px",
 };
 
+const timerStyle = {
+  marginTop: "10px",
+  fontSize: "16px",
+};
+
+const waitMessageStyle = {
+  marginTop: "10px",
+  fontSize: "16px",
+  fontStyle: "italic",
+};
 
 export default App;
