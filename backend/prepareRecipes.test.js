@@ -1,73 +1,61 @@
-const axios = require("axios");
-const request = require("supertest");
-const express = require("express");
-const cors = require("cors");
-const { json } = require("express");
-const prepareRecipesHandler = require("./prepareRecipes");
+import prepareRecipes from "./prepareRecipes";
+const devResponse = require("./response.json");
+
 jest.mock("axios");
 
 describe("Server API", () => {
-  let app;
+  it("generateRecipes returns generated recipes", async () => {
+    const sampleIngredients = ["amaretto", "ananas", "awokado"];
 
-  beforeEach(() => {
-    app = express();
-    app.use(cors());
-    app.use(json());
-    app.post("/prepareRecipes", prepareRecipesHandler);
+    const json = jest.fn();
+    const status = jest.fn().mockImplementation(() => ({
+      json,
+    }));
+    const reqMock = {
+      body: {
+        ingredients: sampleIngredients,
+      },
+    };
+
+    const resMock = {
+      status,
+      json,
+    };
+
+    await prepareRecipes(reqMock, resMock);
+
+    expect(json).toBeCalledTimes(1);
+    expect(json).toBeCalledWith(devResponse.choices[0].message.content);
+    expect(status).toBeCalledTimes(1);
+    expect(status).toBeCalledWith(200);
   });
 
-  it("generateRecipes returns proper recipes for given API response", async () => {
-    const sampleIngredients = ["pomidory", "jajka", "sałata"];
-    const sampleRecipes = "[\n{\n\"title\": \"Title 1\",\n\"recipe\": \"Recipe 1\",\n\"ingredients\": [\n{\"ingredient\": \"Ingredient 1\", \"quantity\": \"500g\"},\n{\"ingredient\": \"ingredient 2\", \"quantity\": \"1 łyżeczka\"}\n]\n},\n{\n\"title\": \"Title 2\",\n\"recipe\": \"Recipe 2\",\n\"ingredients\": [\n{\"ingredient\": \"Ingredient 1\", \"quantity\": \"500g\"},\n{\"ingredient\": \"ingredient 2\", \"quantity\": \"1 łyżeczka\"}\n]\n},{\n\"title\": \"Title 3\",\n\"recipe\": \"Recipe 3\",\n\"ingredients\": [\n{\"ingredient\": \"Ingredient 1\", \"quantity\": \"500g\"},\n{\"ingredient\": \"ingredient 2\", \"quantity\": \"1 łyżeczka\"}\n]\n}\n]";
-  
-    axios.post.mockResolvedValue({
-        data: {
-          choices: [
-            {
-              message: {
-                role: 'assistant',
-                content: sampleRecipes
-              },
-              finish_reason: 'stop',
-              index: 0
-            }
-          ]
-        }
-    });
-  
-    const expectedRecipes = JSON.parse(sampleRecipes).map((choice) => {
-      const recipe = choice.recipe;
-      const title = choice.title;
-      const ingredients = choice.ingredients;
-      return {
-        title,
-        recipe,
-        ingredients
-      };
-    });
-
-    const res = await request(app)
-      .post("/prepareRecipes")
-      .send({ ingredients: sampleIngredients })
-      .expect("Content-Type", /json/)
-      .expect(200);
-  
-    expect(res.body).toEqual(expectedRecipes);
-  });
-  
-
-  it("generateRecipes returns 500 when API request fails", async () => {
-    const sampleIngredients = ["potatoes", "onions", "carrots"];
+  it("generateRecipes returns 500 when ingredients from request are not valid", async () => {
+    const sampleIngredients = ["pokrzywa", "ananas", "awokado"];
     const errorMessage = "Failed to generate recipes";
 
-    axios.post.mockRejectedValue(new Error(errorMessage));
+    const json = jest.fn();
+    const status = jest.fn().mockImplementation(() => ({
+      json,
+    }));
+    const reqMock = {
+      body: {
+        ingredients: sampleIngredients,
+      },
+    };
 
-    const res = await request(app)
-      .post("/prepareRecipes")
-      .send({ ingredients: sampleIngredients })
-      .expect("Content-Type", /json/)
-      .expect(500);
+    const resMock = {
+      status,
+      json,
+    };
 
-    expect(res.body).toEqual({ message: errorMessage });
+    await prepareRecipes(reqMock, resMock);
+
+    expect(json).toBeCalledTimes(1);
+    expect(json).toBeCalledWith({
+      message: "Failed to generate recipes",
+    });
+    expect(status).toBeCalledTimes(1);
+    expect(status).toBeCalledWith(500);
   });
 });
