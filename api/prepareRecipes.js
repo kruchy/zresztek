@@ -49,7 +49,7 @@ module.exports =  async function prepareRecipesHandler(req, res) {
     const response = isDev ? { data: devResponse } : await axios.post(
       "https://api.openai.com/v1/chat/completions",
       {
-        model: "gpt-3.5-turbo",
+        model: "gpt-4",
         messages: [ 
           {content: `${process.env.RECIPE_PROMPT}: ${ingredients.join(", ")}`,
           role: "system"}
