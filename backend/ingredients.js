@@ -113,7 +113,7 @@ const knownIngredients = [
   "woda",
   "zielona soczewica",
   "ziemniak",
-  "żurawina"
+  "żurawina",
 ];
 
-export default knownIngredients;
+module.exports = knownIngredients;
