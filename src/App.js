@@ -10,7 +10,8 @@ import Image from "./img/cover.png"
 
 
 const StyledAutocomplete = styled(Autocomplete)`
-  width: 500px;
+width: 100%;
+max-width: 500px;
 `;
 
 const StyledTextField = styled(TextField)`
@@ -22,7 +23,8 @@ const Logo = styled(Box)`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   height: 200px;
   margin: 10px auto;
 `;
@@ -133,12 +135,14 @@ const recipeStyle = {
   flexDirection: "column",
   alignItems: "center",
   margin: "20px",
-  width: "40%",
+  width: "100%",
+  maxWidth: "400px", 
   border: "1px solid #ccc",
   borderRadius: "5px",
   padding: "15px",
   backgroundColor: "white",
 };
+
 
 const notificationStyle = {
   position: "fixed",

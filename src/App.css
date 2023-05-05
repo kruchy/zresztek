@@ -49,3 +49,33 @@ button:hover {
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
 }
+
+@media (max-width: 768px) {
+  .search-container {
+    flex-direction: column;
+  }
+
+  button {
+    margin-top: 20px;
+  }
+
+  .recipe {
+    width: 100%;
+  }
+
+  .recipes-container {
+    flex-direction: column;
+    align-items: center;
+  }
+  .Logo {
+    height: 100px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .recipe {
+    width: 45%;
+  }
+}
+
+
