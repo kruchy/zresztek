@@ -1,4 +1,5 @@
 require("dotenv").config();
+const knownIngredients = require("./ingredients");
 const devResponse = require("./response.json");
 
 const axios = require("axios");
@@ -31,6 +32,15 @@ module.exports = async function prepareRecipesHandler(req, res) {
       throw new Error("Ingredients are empty");
     }
     const ingredients = req.body.ingredients;
+
+    // Check if all ingredients in req.body.ingredients are in the knownIngredients array
+    const areIngredientsValid = ingredients.every((ingredient) =>
+      knownIngredients.includes(ingredient)
+    );
+
+    if (!areIngredientsValid) {
+      throw new Error("Invalid ingredient(s) detected");
+    }
 
     const messages = [
       {
