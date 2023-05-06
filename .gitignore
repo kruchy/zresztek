@@ -105,3 +105,4 @@ dist
 .vercel
 
 build/*
+.vscode/*

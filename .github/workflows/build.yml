@@ -1,0 +1,69 @@
+name: Build, Test and Deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [backend, frontend]
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 14
+
+    - name: Install dependencies
+      if: contains(github.event.head_commit.modified, matrix.app)
+      run: |
+        cd ${{ matrix.app }}
+        npm ci
+
+    - name: Run tests
+      if: contains(github.event.head_commit.modified, matrix.app)
+      run: |
+        cd ${{ matrix.app }}
+        npm test
+
+  build_and_push_docker_images:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: [backend, frontend]
+
+    env:
+      backend: --build-arg RECIPE_PROMPT=${{ secrets.RECIPE_PROMPT }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+      frontend: --build-arg PORT=${{ secrets.PORT }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Log in to GitHub Container Registry
+      if: contains(github.event.head_commit.modified, matrix.app)
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      if: contains(github.event.head_commit.modified, matrix.app)
+      run: |
+        cd ${{ matrix.app }}
+        IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}:${{ github.sha }}
+        DOCKER_BUILD_ARGS="${{ env[matrix.app] }}"
+        docker build -t $IMAGE_NAME . $DOCKER_BUILD_ARGS
+        docker push $IMAGE_NAME
