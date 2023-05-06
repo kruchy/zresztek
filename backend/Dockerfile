@@ -7,11 +7,11 @@ ENV OPENAI_API_KEY=${OPENAI_API_KEY}
 
 WORKDIR /app
 
-COPY backend/package*.json ./
+COPY package*.json ./
 
 RUN npm ci
 
-COPY backend .
+COPY . .
 
 RUN npm install -g pm2
 
