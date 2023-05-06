@@ -1,5 +1,8 @@
 FROM node:18-alpine AS build
 
+ARG PORT
+ENV PORT=${PORT}
+
 WORKDIR /app
 
 COPY package*.json ./
