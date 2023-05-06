@@ -1,0 +1,32 @@
+version: "3.9"
+services:
+  frontend:
+    image: zresztek-frontend
+    container_name: zresztek-frontend
+    build: 
+      context: ./frontend
+      args:
+        REACT_APP_API_PATH: "https://krzysiekapi.dszymczuk.pl"
+    ports:
+      - "80:80"
+    environment:
+      REACT_APP_API_PATH: "https://krzysiekapi.dszymczuk.pl"
+      RECIPE_PROMPT: "${RECIPE_PROMPT}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+
+  backend:
+    image: zresztek-backend
+    container_name: zresztek-backend
+    build: 
+      context: ./backend
+      args:
+        PORT: "4000"
+    ports:
+      - "4000:4000"
+    environment:
+      PORT: "4000"
+
+
+networks:
+  nginx-proxy:
+    external: true
