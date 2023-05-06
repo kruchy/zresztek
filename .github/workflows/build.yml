@@ -43,6 +43,10 @@ jobs:
       matrix:
         app: [backend, frontend]
 
+    env:
+      backend: --build-arg RECIPE_PROMPT=${{ secrets.RECIPE_PROMPT }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
+      frontend: --build-arg PORT=${{ secrets.PORT }}
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -53,12 +57,13 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: ${{ secrets.GHCR_TOKEN }}
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push Docker image
       if: contains(github.event.head_commit.modified, matrix.app)
       run: |
         cd ${{ matrix.app }}
         IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}:${{ github.sha }}
-        docker build -t $IMAGE_NAME .
+        DOCKER_BUILD_ARGS="${{ env[matrix.app] }}"
+        docker build -t $IMAGE_NAME . $DOCKER_BUILD_ARGS
         docker push $IMAGE_NAME
