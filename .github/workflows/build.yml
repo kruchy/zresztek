@@ -64,8 +64,8 @@ jobs:
         app: [backend, frontend]
 
     env:
-      backend: --build-arg RECIPE_PROMPT=${{ secrets.RECIPE_PROMPT }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-      frontend: --build-arg PORT=${{ secrets.PORT }}
+      backend: --build-arg RECIPE_PROMPT=${{ secrets.RECIPE_PROMPT }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} --build-arg PORT=${{ secrets.PORT }}
+      frontend: 
 
     steps:
     - name: Checkout repository
