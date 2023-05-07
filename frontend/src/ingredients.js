@@ -173,7 +173,6 @@ const knownIngredients = [
   "wanilia",
   "winogrona",
   "włoszczyzna",
-  "woda",
   "wołowina",
   "zielona soczewica",
   "ziemniak",
