@@ -9,7 +9,27 @@ on:
       - 'frontend/**'
 
 jobs:
+  path-filter:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Path filtering
+        uses: dorny/paths-filter@v2
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'backend/**'
+            frontend:
+              - 'frontend/**'
+
   build_and_test:
+    needs: path-filter
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -25,19 +45,19 @@ jobs:
         node-version: 18
 
     - name: Install dependencies
-      if: contains( toJson(github.event.commits[0].modified), matrix.app)
+      if: needs.path-filter.outputs[matrix.app] == 'true'
       run: |
         cd ${{ matrix.app }}
         npm ci
 
     - name: Run tests
-      if: contains( toJson(github.event.commits[0].modified), matrix.app)
+      if: needs.path-filter.outputs[matrix.app] == 'true'
       run: |
         cd ${{ matrix.app }}
         npm test
 
   build_and_push_docker_images:
-    needs: build_and_test
+    needs: [path-filter, build_and_test]
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -52,7 +72,7 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Log in to GitHub Container Registry
-      if: contains( toJson(github.event.commits[0].modified), matrix.app)
+      if: needs.path-filter.outputs[matrix.app] == 'true'
       uses: docker/login-action@v1
       with:
         registry: ghcr.io
@@ -60,7 +80,7 @@ jobs:
         password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Build and push Docker image
-      if: contains( toJson(github.event.commits[0].modified), matrix.app)
+      if: needs.path-filter.outputs[matrix.app] == 'true'
       run: |
         cd ${{ matrix.app }}
         IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}:${{ github.sha }}
