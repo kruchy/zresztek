@@ -1,0 +1,37 @@
+version: "3.9"
+services:
+  frontend:
+    image: zresztek-frontend
+    container_name: zresztek-frontend
+    build: 
+      context: ./frontend
+      args:
+        REACT_APP_API_PATH: "${API_PATH}"
+    environment:
+      REACT_APP_API_PATH: "${API_PATH}"
+    ports:
+      - "80:80"
+    networks:
+      - nginx-proxy
+
+  backend:
+    image: zresztek-backend
+    container_name: zresztek-backend
+    build: 
+      context: ./backend
+      args:
+        PORT: "${API_PORT}"
+    environment:
+      PORT: "${API_PORT}"
+      RECIPE_PROMPT: "${RECIPE_PROMPT}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      NODE_ENV: "production"
+    ports:
+      - "4000:${API_PORT}"
+    networks:
+      - nginx-proxy
+
+
+networks:
+  nginx-proxy:
+    external: true
