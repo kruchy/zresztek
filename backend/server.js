@@ -16,9 +16,13 @@ app.use(bodyParser.json());
 
 app.use(errorHandling);
 
-app.get("/commitSha", (req, res) =>
-  res.send(process.env.GIT_LAST_COMMIT_SHA || "Unknown commit sha")
-);
+app.get("/deploy", (req, res) => {
+  const contentToDisplay = `
+SHA: ${process.env.GIT_LAST_COMMIT_SHA || "Unknown commit sha"}
+LAST DEPLOY TIME: ${process.env.DEPLOY_TIME || "Unknown commit sha"}
+`;
+  return res.send();
+});
 
 app.get("/healthCheck", (req, res) => res.send("Health Check OK"));
 
