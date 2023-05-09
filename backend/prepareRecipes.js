@@ -1,5 +1,7 @@
 require("dotenv").config();
 const knownIngredients = require("./ingredients");
+const spices = require("./spices");
+
 const devResponse = require("./response.json");
 
 const axios = require("axios");
@@ -43,11 +45,18 @@ module.exports = async function prepareRecipesHandler(req, res) {
     if (!areIngredientsValid) {
       throw new Error("Invalid ingredient(s) detected");
     }
+    const recipesNumber = req.body.recipesNumber
+    const recipesType = req.body.useOnlySelected
+
+    const prompt = process.env.RECIPE_PROMPT
+      .replace("{{spices}}", spices.join(", "))
+      .replace("{{recipesNumber}}", recipesNumber || 3)
+      .replace("{{useOnlySelected}}", useOnlySelected ? process.env.CONSTANT_INGREDIENTS : process.env.VARYING_INGREDIENTS)
 
     const messages = [
       {
         role: "system",
-        content: `${process.env.RECIPE_PROMPT}: ${ingredients.join(", ")}`,
+        content: `${prompt}: ${ingredients.join(", ")}`,
       },
     ];
 
