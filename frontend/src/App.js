@@ -38,7 +38,8 @@ function App() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(0);
-  
+  const [lastSearchedIngredients, setLastSearchedIngredients] = useState([]);
+
   const startTimer = () => {
     return setInterval(() => {
       setTimer((prevTimer) => prevTimer + 1);
@@ -54,6 +55,7 @@ function App() {
 
   const handleSearchRecipes = async () => {
     setLoading(true);
+  setLastSearchedIngredients(ingredients);
     const timerInterval = startTimer(); 
     try {
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/prepareRecipes`, {
@@ -103,17 +105,19 @@ function App() {
         />
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
       </div>
-      <div className="selected-ingredients-container" style={selectedIngredientsContainerStyle}>
-      <div className="selected-ingredients" > 
-        <strong>Wybrane składniki:</strong>{" "}
-        {ingredients.map((ingredient, index) => (
-          <span key={index} className="ingredient">
-            {ingredient}
-            {index < ingredients.length - 1 ? ", " : ""}
-          </span>
-        ))}
-      </div>
-      </div>
+      {lastSearchedIngredients.length > 0 && (
+        <div className="selected-ingredients-container" style={selectedIngredientsContainerStyle}>
+          <div className="selected-ingredients">
+            <strong>Wybrane składniki:</strong>{" "}
+            {lastSearchedIngredients.map((ingredient, index) => (
+              <span key={index} className="ingredient">
+                {ingredient}
+                {index < lastSearchedIngredients.length - 1 ? ", " : ""}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
       {loading && (
          <div
          className="spinner-container"
