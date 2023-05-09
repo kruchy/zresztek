@@ -77,6 +77,7 @@ module.exports = async function prepareRecipesHandler(req, res) {
       };
     });
 
+    res.status(200).json(generatedRecipes);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to generate recipes" });
