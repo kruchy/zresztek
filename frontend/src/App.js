@@ -103,8 +103,22 @@ function App() {
         />
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
       </div>
+      <div className="selected-ingredients-container" style={selectedIngredientsContainerStyle}>
+      <div className="selected-ingredients" > 
+        <strong>Wybrane składniki:</strong>{" "}
+        {ingredients.map((ingredient, index) => (
+          <span key={index} className="ingredient">
+            {ingredient}
+            {index < ingredients.length - 1 ? ", " : ""}
+          </span>
+        ))}
+      </div>
+      </div>
       {loading && (
-        <div className="spinner-container" style={spinnerContainerStyle}>
+         <div
+         className="spinner-container"
+         style={{ ...spinnerContainerStyle, flexDirection: "column" }}
+       >
           <CircularProgress />
           <div className="timer" style={timerStyle}>
             Czas oczekiwania: {timer} sekund
@@ -189,6 +203,13 @@ const waitMessageStyle = {
   marginTop: "10px",
   fontSize: "16px",
   fontStyle: "italic",
+};
+
+const selectedIngredientsContainerStyle = {
+  display: 'flex',
+  justifyContent: 'center',
+  width: '100%',
+  margin: "10px auto"
 };
 
 export default App;
