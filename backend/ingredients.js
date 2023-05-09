@@ -176,6 +176,7 @@ const knownIngredients = [
     "szynka",
     "szynka parmeńska",
     "tofu (ser sojowy)",
+    "tortilla pszenna",
     "trawa pszeniczna",
     "truskawka",
     "twaróg",
