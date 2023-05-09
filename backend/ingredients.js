@@ -54,6 +54,7 @@ const knownIngredients = [
 "gorgonzola (ser)",
 "goździk",
 "grapefruit",
+"groch",
 "groszek",
 "gruszka",
 "grzyby marynowane",
