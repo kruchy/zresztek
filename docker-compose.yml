@@ -25,6 +25,7 @@ services:
       PORT: "${API_PORT}"
       RECIPE_PROMPT: "${RECIPE_PROMPT}"
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
+      GIT_LAST_COMMIT_SHA: "${GIT_LAST_COMMIT_SHA}"
       NODE_ENV: "production"
     ports:
       - "4000:${API_PORT}"
