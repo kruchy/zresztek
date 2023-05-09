@@ -1,2 +1,2 @@
 git pull
-docker-compose up -d --build
+GIT_LAST_COMMIT_SHA=$(git rev-parse HEAD) docker-compose up -d --build
