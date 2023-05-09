@@ -136,7 +136,7 @@ function App() {
       )}
       <div className="recipes-container" style={recipesContainerStyle}>
         {recipes.map((recipe, index) => (
-          <div key={index} className="recipe" style={recipeStyle}>
+          <div key={index} className="recipe" style={recipeStyle(recipes.length)}>
             <div>
               <h2>{recipe.title}</h2>
               <div>
@@ -164,20 +164,44 @@ const recipesContainerStyle = {
   flexDirection: "row",
   flexWrap: "wrap",
   justifyContent: "center",
+  alignItems: "flex-start",
+  padding: "20px",
 };
 
-const recipeStyle = {
+const getRecipeStyle = (recipeCount) => {
+  if (recipeCount <= 3) {
+    return {
+      width: "calc(100% / 3 - 20px)",
+    };
+  } else if (recipeCount === 4) {
+    return {
+      width: "calc(50% - 20px)",
+    };
+  } else if (recipeCount === 5) {
+    return {
+      width: "calc(100% / 3 - 20px)",
+    };
+  } else {
+    return {
+      width: "calc(33.333% - 20px)",
+    };
+  }
+};
+
+const recipeStyle = (recipeCount) => ({
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  margin: "20px",
-  width: "100%",
-  maxWidth: "400px", 
+  margin: "10px",
+  width: "calc(33.333% - 20px)",
+  maxWidth: "400px",
   border: "1px solid #ccc",
   borderRadius: "5px",
   padding: "15px",
   backgroundColor: "white",
-};
+  boxSizing: "border-box",
+  ...getRecipeStyle(recipeCount),
+});
 
 
 const notificationStyle = {
