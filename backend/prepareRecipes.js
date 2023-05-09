@@ -63,7 +63,7 @@ module.exports = async function prepareRecipesHandler(req, res) {
     const options = {
       model: "gpt-4",
       temperature: 0.7,
-      max_tokens: 3000,
+      max_tokens: 5000,
       n: 1,
     };
 
