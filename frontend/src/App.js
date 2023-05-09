@@ -10,8 +10,8 @@ import Image from "./img/cover.png"
 
 
 const StyledAutocomplete = styled(Autocomplete)`
-width: 100%;
-max-width: 500px;
+  width: 100%;
+  max-width: 500px;
 `;
 
 const StyledTextField = styled(TextField)`
@@ -28,9 +28,6 @@ const Logo = styled(Box)`
   height: 200px;
   margin: 10px auto;
 `;
-
-
-
 
 function App() {
   const [ingredients, setIngredients] = useState([]);
@@ -55,8 +52,8 @@ function App() {
 
   const handleSearchRecipes = async () => {
     setLoading(true);
-  setLastSearchedIngredients(ingredients);
-    const timerInterval = startTimer(); 
+    setLastSearchedIngredients(ingredients);
+    const timerInterval = startTimer();
     try {
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/prepareRecipes`, {
         method: "POST",
@@ -77,8 +74,8 @@ function App() {
       setError("Wystąpił chwilowy błąd. Spróbuj ponownie później.");
     } finally {
       setLoading(false);
-      clearInterval(timerInterval); 
-      setTimer(0); 
+      clearInterval(timerInterval);
+      setTimer(0);
     }
   };
 
@@ -119,10 +116,10 @@ function App() {
         </div>
       )}
       {loading && (
-         <div
-         className="spinner-container"
-         style={{ ...spinnerContainerStyle, flexDirection: "column" }}
-       >
+        <div
+          className="spinner-container"
+          style={{ ...spinnerContainerStyle, flexDirection: "column" }}
+        >
           <CircularProgress />
           <div className="timer" style={timerStyle}>
             Czas oczekiwania: {timer} sekund
@@ -136,7 +133,7 @@ function App() {
       )}
       <div className="recipes-container" style={recipesContainerStyle}>
         {recipes.map((recipe, index) => (
-          <div key={index} className="recipe" style={recipeStyle(recipes.length)}>
+          <div key={index} className="recipe" style={recipeStyle}>
             <div>
               <h2>{recipe.title}</h2>
               <div>
@@ -168,40 +165,20 @@ const recipesContainerStyle = {
   padding: "20px",
 };
 
-const getRecipeStyle = (recipeCount) => {
-  if (recipeCount <= 3) {
-    return {
-      width: "calc(100% / 3 - 20px)",
-    };
-  } else if (recipeCount === 4) {
-    return {
-      width: "calc(50% - 20px)",
-    };
-  } else if (recipeCount === 5) {
-    return {
-      width: "calc(100% / 3 - 20px)",
-    };
-  } else {
-    return {
-      width: "calc(33.333% - 20px)",
-    };
-  }
-};
 
-const recipeStyle = (recipeCount) => ({
+const recipeStyle = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   margin: "10px",
-  width: "calc(33.333% - 20px)",
   maxWidth: "400px",
   border: "1px solid #ccc",
   borderRadius: "5px",
   padding: "15px",
   backgroundColor: "white",
   boxSizing: "border-box",
-  ...getRecipeStyle(recipeCount),
-});
+};
+
 
 
 const notificationStyle = {
