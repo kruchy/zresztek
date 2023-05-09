@@ -13,6 +13,19 @@
   justify-content: center;
 }
 
+.search-container > div {
+  margin: 0 5px;
+}
+
+.recipes-customization-container{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 10px auto;
+}
+.recipes-customization-container > div {
+  margin: 0 10px;
+}
 button {
   display: inline-block;
   background-color: #007bff;

@@ -36,6 +36,8 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(0);
   const [lastSearchedIngredients, setLastSearchedIngredients] = useState([]);
+  const [recipesNumber, setRecipesNumber] = useState(3);
+  const [useOnlySelected, setUseOnlySelected] = useState(false);
 
   const startTimer = () => {
     return setInterval(() => {
@@ -60,7 +62,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ingredients }),
+        body: JSON.stringify({ ingredients,recipesNumber, useOnlySelected }),
       });
 
       if (!response.ok) {
@@ -100,7 +102,31 @@ function App() {
             />
           )}
         />
+        
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
+      </div>
+      <div className="recipes-customization-container">
+      <div className="recipes-number-container">
+          <label htmlFor="recipes-number">Wybór liczby przepisów:</label>
+          <select
+            id="recipes-number"
+            value={recipesNumber}
+            onChange={(event) => setRecipesNumber(event.target.value)}
+          >
+            <option value="3">3</option>
+            <option value="4">4</option>
+          </select>
+        </div>
+        {/* Dodajemy pole "Użyj tylko wybranych składników" */}
+        <div className="use-only-selected-container">
+          <label htmlFor="use-only-selected">Użyj tylko wybranych składników:</label>
+          <input
+            id="use-only-selected"
+            type="checkbox"
+            checked={useOnlySelected}
+            onChange={(event) => setUseOnlySelected(event.target.checked)}
+          />
+        </div>
       </div>
       {lastSearchedIngredients.length > 0 && (
         <div className="selected-ingredients-container" style={selectedIngredientsContainerStyle}>
