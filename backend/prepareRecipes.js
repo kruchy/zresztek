@@ -46,7 +46,7 @@ module.exports = async function prepareRecipesHandler(req, res) {
       throw new Error("Invalid ingredient(s) detected");
     }
     const recipesNumber = req.body.recipesNumber
-    const recipesType = req.body.useOnlySelected
+    const useOnlySelected = req.body.useOnlySelected
 
     const prompt = process.env.RECIPE_PROMPT
       .replace("{{spices}}", spices.join(", "))

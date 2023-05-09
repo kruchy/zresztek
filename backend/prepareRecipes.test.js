@@ -6,6 +6,8 @@ jest.mock("axios");
 describe("Server API", () => {
   it("generateRecipes returns generated recipes", async () => {
     const sampleIngredients = ["amaretto", "ananas", "awokado"];
+    const recipesNumber = 3;
+    const useOnlySelected = false;
 
     const json = jest.fn();
     const status = jest.fn().mockImplementation(() => ({
@@ -14,6 +16,8 @@ describe("Server API", () => {
     const reqMock = {
       body: {
         ingredients: sampleIngredients,
+        recipesNumber: recipesNumber,
+        useOnlySelected: useOnlySelected,
       },
     };
 
@@ -32,6 +36,8 @@ describe("Server API", () => {
 
   it("generateRecipes returns 500 when ingredients from request are not valid", async () => {
     const sampleIngredients = ["pokrzywa", "ananas", "awokado"];
+    const recipesNumber = 4;
+    const useOnlySelected = true;
     const errorMessage = "Failed to generate recipes";
 
     const json = jest.fn();
@@ -41,6 +47,8 @@ describe("Server API", () => {
     const reqMock = {
       body: {
         ingredients: sampleIngredients,
+        recipesNumber: recipesNumber,
+        useOnlySelected: useOnlySelected,
       },
     };
 
