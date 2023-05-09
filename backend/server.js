@@ -18,8 +18,8 @@ app.use(errorHandling);
 
 app.get("/commitSha", (req, res) => {
   const contentToDisplay = `
-SHA:${process.env.GIT_LAST_COMMIT_SHA || "Unknown commit sha"}
-LAST DEPLOY TIME:${process.env.DEPLOY_TIME || "Unknown commit sha"}
+SHA: ${process.env.GIT_LAST_COMMIT_SHA || "Unknown commit sha"}
+LAST DEPLOY TIME: ${process.env.DEPLOY_TIME || "Unknown commit sha"}
 `;
   return res.send();
 });
