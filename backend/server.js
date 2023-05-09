@@ -21,7 +21,7 @@ app.get("/deploy", (req, res) => {
 SHA: ${process.env.GIT_LAST_COMMIT_SHA || "Unknown commit sha"}
 LAST DEPLOY TIME: ${process.env.DEPLOY_TIME || "Unknown commit sha"}
 `;
-  return res.send();
+  return res.send(contentToDisplay);
 });
 
 app.get("/healthCheck", (req, res) => res.send("Health Check OK"));
