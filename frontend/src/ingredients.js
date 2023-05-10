@@ -21,6 +21,7 @@ const knownIngredients = [
   "bulion",
   "buraki",
   "buraki gotowane",
+  "burrata",
   "cebula",
   "chleb",
   "chleb tostowy",
