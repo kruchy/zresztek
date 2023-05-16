@@ -5,6 +5,7 @@ const spices = require("./spices");
 const devResponse = require("./response.json");
 
 const axios = require("axios");
+const { response } = require("express");
 
 const openai = axios.create({
   baseURL: "https://api.openai.com/v1",
@@ -48,10 +49,10 @@ module.exports = async function prepareRecipesHandler(req, res) {
     const recipesNumber = req.body.recipesNumber
     const useOnlySelected = req.body.useOnlySelected
 
-    const prompt = process.env.RECIPE_PROMPT
+    const prompt = process.env.SINGLE_RECIPE_PROMPT
       .replace("{{spices}}", spices.join(", "))
       .replace("{{recipesNumber}}", recipesNumber || 3)
-      .replace("{{useOnlySelected}}", useOnlySelected ? process.env.CONSTANT_INGREDIENTS : process.env.VARYING_INGREDIENTS)
+      .replace("{{useOnlySelected}}", useOnlySelected ? process.env.CONSTANT_INGREDIENTS : process.env.SINGLE_VARYING_INGREDIENTS)
 
     const messages = [
       {
@@ -67,13 +68,22 @@ module.exports = async function prepareRecipesHandler(req, res) {
       n: 1,
     };
 
-    const choices = isProduction
-      ? await createChatCompletion(messages, options)
-      : devResponse.choices;
+    let choices;
+    if (isProduction) {
+      let array = [];
+      for(let i = 0; i < recipesNumber; i++) {
+        array.push(createChatCompletion(messages, options));
+    }
+      // const requests = [createChatCompletion(messages, options), createChatCompletion(messages, options), createChatCompletion(messages, options)];
+      const responses = await Promise.all(array);
+      console.log(JSON.stringify(responses))
+      choices = [].concat(...responses.map(response => JSON.parse(response[0].message.content)));
+    } else {
+      let recipe = devResponse.choices[0].message.content
+      choices = [].concat(recipe);
+    }
 
-    const resultResponse = isProduction
-      ? JSON.parse(choices[0].message.content)
-      : choices[0].message.content;
+    const resultResponse = choices
 
     const generatedRecipes = resultResponse.map((choice) => {
       const recipe = choice.recipe;
