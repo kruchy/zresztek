@@ -67,7 +67,6 @@ module.exports = async function prepareRecipesHandler(req, res) {
 
     const prompt = process.env.SINGLE_RECIPE_PROMPT
       .replace("{{spices}}", spices.join(", "))
-      .replace("{{recipesNumber}}", recipesNumber || 3)
       .replace("{{useOnlySelected}}", useOnlySelected ? process.env.CONSTANT_INGREDIENTS : process.env.SINGLE_VARYING_INGREDIENTS)
 
     const messages = [
@@ -83,14 +82,20 @@ module.exports = async function prepareRecipesHandler(req, res) {
       max_tokens: 5000,
       n: 1,
     };
-
+    let numCompletions;
+    if (ingredients.length < 5) {
+      numCompletions = 2;
+    } else if (ingredients.length < 9) {
+      numCompletions = 3;
+    } else {
+      numCompletions = 4;
+    }
     let choices;
     if (isProduction) {
       let array = [];
-      for(let i = 0; i < recipesNumber; i++) {
+      for(let i = 0; i < numCompletions; i++) {
         array.push(createChatCompletion(messages, options));
     }
-      // const requests = [createChatCompletion(messages, options), createChatCompletion(messages, options), createChatCompletion(messages, options)];
       const responses = await Promise.all(array);
       choices = [].concat(...responses.map(response => JSON.parse(response[0].message.content)));
     } else {

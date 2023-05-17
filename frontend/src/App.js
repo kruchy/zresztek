@@ -106,7 +106,7 @@ function App() {
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
       </div>
       <div className="recipes-customization-container">
-      <div className="recipes-number-container">
+      {/* <div className="recipes-number-container">
           <label htmlFor="recipes-number">Wybór liczby przepisów:</label>
           <select
             id="recipes-number"
@@ -116,7 +116,7 @@ function App() {
             <option value="3">3</option>
             <option value="4">4</option>
           </select>
-        </div>
+        </div> */}
         {/* Dodajemy pole "Użyj tylko wybranych składników" */}
         <div className="use-only-selected-container">
           <label htmlFor="use-only-selected">Użyj tylko wybranych składników:</label>
