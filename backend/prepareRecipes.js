@@ -24,8 +24,24 @@ async function createChatCompletion(messages, options = {}) {
       messages,
       ...options,
     });
-
     return response.data.choices;
+  } catch (error) {
+    console.error("Error creating chat completion:", error);
+  }
+}
+
+async function createImage(message) {
+  try {
+    const response = await openai.post("/images/generations", {
+      prompt: message,
+      size: "512x512",
+      response_format: "url",
+    });
+    console.log(message)
+    // console.log(response)
+
+    console.log(response.data)
+    return response.data.data[0].url;
   } catch (error) {
     console.error("Error creating chat completion:", error);
   }
@@ -76,7 +92,6 @@ module.exports = async function prepareRecipesHandler(req, res) {
     }
       // const requests = [createChatCompletion(messages, options), createChatCompletion(messages, options), createChatCompletion(messages, options)];
       const responses = await Promise.all(array);
-      console.log(JSON.stringify(responses))
       choices = [].concat(...responses.map(response => JSON.parse(response[0].message.content)));
     } else {
       let recipe = devResponse.choices[0].message.content
@@ -85,17 +100,21 @@ module.exports = async function prepareRecipesHandler(req, res) {
 
     const resultResponse = choices
 
-    const generatedRecipes = resultResponse.map((choice) => {
+    const generatedRecipesPromises = resultResponse.map(async (choice) => {
       const recipe = choice.recipe;
       const title = choice.title;
       const ingredients = choice.ingredients;
+      const image = await createImage(choice.imagePrompt);
       return {
         title,
         recipe,
         ingredients,
+        image,
       };
     });
-
+    
+    const generatedRecipes = await Promise.all(generatedRecipesPromises);
+    console.log(JSON.stringify(generatedRecipes))
     res.status(200).json(generatedRecipes);
   } catch (error) {
     console.error(error);

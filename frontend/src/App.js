@@ -162,6 +162,7 @@ function App() {
           <div key={index} className="recipe" style={recipeStyle}>
             <div>
               <h2>{recipe.title}</h2>
+              {recipe.image && <img src={recipe.image} alt={recipe.title} style={imageStyle} />}
               <div>
                 {recipe.recipe.map((step, stepIndex) => (
                   <p key={stepIndex}>{step}</p>
@@ -181,7 +182,12 @@ function App() {
     </div>
   );
 }
-
+const imageStyle = {
+  maxWidth: "100%",
+  height: "auto",
+  borderRadius: "5px",
+  marginBottom: "10px",
+};
 const recipesContainerStyle = {
   display: "flex",
   flexDirection: "row",
