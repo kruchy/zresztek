@@ -62,7 +62,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ingredients,recipesNumber, useOnlySelected }),
+        body: JSON.stringify({ ingredients, recipesNumber, useOnlySelected }),
       });
 
       if (!response.ok) {
@@ -85,7 +85,7 @@ function App() {
     <div className="App">
       <Logo data-testid="Logo" />
       {error && (
-        <div className="error-notification" style={notificationStyle}>
+        <div className="notification" >
           {error}
         </div>
       )}
@@ -102,11 +102,11 @@ function App() {
             />
           )}
         />
-        
+
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
       </div>
       <div className="recipes-customization-container">
-      {/* <div className="recipes-number-container">
+        {/* <div className="recipes-number-container">
           <label htmlFor="recipes-number">Wybór liczby przepisów:</label>
           <select
             id="recipes-number"
@@ -129,7 +129,7 @@ function App() {
         </div>
       </div>
       {lastSearchedIngredients.length > 0 && (
-        <div className="selected-ingredients-container" style={selectedIngredientsContainerStyle}>
+        <div className="selected-ingredients-container">
           <div className="selected-ingredients">
             <strong>Wybrane składniki:</strong>{" "}
             {lastSearchedIngredients.map((ingredient, index) => (
@@ -142,27 +142,24 @@ function App() {
         </div>
       )}
       {loading && (
-        <div
-          className="spinner-container"
-          style={{ ...spinnerContainerStyle, flexDirection: "column" }}
-        >
+        <div className="spinner-container">
           <CircularProgress />
-          <div className="timer" style={timerStyle}>
+          <div className="timer" >
             Czas oczekiwania: {timer} sekund
           </div>
           {timer >= 20 && (
-            <div className="wait-message" style={waitMessageStyle}>
-              To może potrwać, ale będzie warto!
+            <div className="wait-message" >
+              Trwa generowanie przepisów, to może chwilkę potrwać!
             </div>
           )}
         </div>
       )}
-      <div className="recipes-container" style={recipesContainerStyle}>
+      <div className="recipes-container" >
         {recipes.map((recipe, index) => (
-          <div key={index} className="recipe" style={recipeStyle}>
+          <div key={index} className="recipe" >
             <div>
               <h2>{recipe.title}</h2>
-              {recipe.image && <img src={recipe.image} alt={recipe.title} style={imageStyle} />}
+              {recipe.image && <img src={recipe.image} alt={recipe.title} className="image" />}
               <div>
                 {recipe.recipe.map((step, stepIndex) => (
                   <p key={stepIndex}>{step}</p>
@@ -182,71 +179,5 @@ function App() {
     </div>
   );
 }
-const imageStyle = {
-  maxWidth: "100%",
-  height: "auto",
-  borderRadius: "5px",
-  marginBottom: "10px",
-};
-const recipesContainerStyle = {
-  display: "flex",
-  flexDirection: "row",
-  flexWrap: "wrap",
-  justifyContent: "center",
-  alignItems: "flex-start",
-  padding: "20px",
-};
-
-
-const recipeStyle = {
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  margin: "10px",
-  maxWidth: "400px",
-  border: "1px solid #ccc",
-  borderRadius: "5px",
-  padding: "15px",
-  backgroundColor: "white",
-  boxSizing: "border-box",
-};
-
-
-
-const notificationStyle = {
-  position: "fixed",
-  top: "20px",
-  right: "20px",
-  backgroundColor: "rgba(255, 0, 0, 0.8)",
-  padding: "10px",
-  borderRadius: "5px",
-  zIndex: 1000,
-  color: "white",
-};
-
-const spinnerContainerStyle = {
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  marginTop: "20px",
-};
-
-const timerStyle = {
-  marginTop: "10px",
-  fontSize: "16px",
-};
-
-const waitMessageStyle = {
-  marginTop: "10px",
-  fontSize: "16px",
-  fontStyle: "italic",
-};
-
-const selectedIngredientsContainerStyle = {
-  display: 'flex',
-  justifyContent: 'center',
-  width: '100%',
-  margin: "10px auto"
-};
 
 export default App;
