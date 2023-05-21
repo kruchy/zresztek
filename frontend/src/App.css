@@ -1,3 +1,7 @@
+body {
+  font-family: Arial, sans-serif;
+}
+
 /* Add this at the top of your CSS file to define the color scheme */
 :root {
   --primary-color: #007bff;
@@ -26,19 +30,22 @@ button:hover {
   background-color: var(--accent-color);
   border: 1px solid #dee2e6;
 }
-
-.notificationStyle {
-  position: "fixed";
-  top: "20px";
-  right: "20px";
-  backgroundColor: "rgba(255, 0, 0, 0.8)";
-  /* We can replace this color with our primary or secondary color */
-  padding: "10px";
-  borderRadius: "5px";
-  zIndex: 1000;
-  color: "white";
+.styled-autocomplete,
+.styled-textfield {
+  width: 100%;
+  max-width: 500px;
 }
 
+.logo {
+  background-image: url('./img/cover.png');  /* Adjust this path based on the actual location of the image file */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  max-width: 500px;
+  height: 200px;
+  margin: 10px auto;
+}
 
 .App {
   max-width: 800px;
@@ -77,9 +84,19 @@ button:hover {
 }
 
 .recipe {
-  width: 30%;
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px;
+  max-width: 400px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: white;
+  box-sizing: border-box;
 }
+
+
 
 /* Dla ekranów o szerokości 768px lub mniejszych */
 @media (max-width: 768px) {
@@ -100,18 +117,17 @@ button:hover {
   }
 
   .recipe {
-    margin: 10px 0;
-    width: 100%;
+    margin: 5px;
+    padding: 10px;
   }
 
   /* Skalowanie tekstu */
   .recipe h2 {
-    font-size: 24px;
+    font-size: 18px;
   }
-
   .recipe p,
   .recipe ul li {
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 

@@ -3,31 +3,20 @@ import "./App.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
-import { styled } from "@mui/system";
 import knownIngredients from "./ingredients";
 import CircularProgress from "@mui/material/CircularProgress";
-import Image from "./img/cover.png"
 
+const StyledAutocomplete = (props) => (
+  <Autocomplete className="styled-autocomplete" {...props} />
+);
 
-const StyledAutocomplete = styled(Autocomplete)`
-  width: 100%;
-  max-width: 500px;
-`;
+const StyledTextField = (props) => (
+  <TextField className="styled-textfield" {...props} />
+);
 
-const StyledTextField = styled(TextField)`
-  width: 100%;
-`;
-
-const Logo = styled(Box)`
-  background-image: url(${Image});
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  width: 100%;
-  max-width: 500px;
-  height: 200px;
-  margin: 10px auto;
-`;
+const Logo = () => (
+  <Box className="logo" data-testid="Logo" />
+);
 
 function App() {
   const [ingredients, setIngredients] = useState([]);
@@ -106,18 +95,20 @@ function App() {
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
       </div>
       <div className="recipes-customization-container">
-        {/* <div className="recipes-number-container">
+         {/* <div className="recipes-number-container">
           <label htmlFor="recipes-number">Wybór liczby przepisów:</label>
           <select
             id="recipes-number"
             value={recipesNumber}
-            onChange={(event) => setRecipesNumber(event.target.value)}
+            onChange={(event) => setRecipesNumber(Number(event.target.value))}
           >
-            <option value="3">3</option>
-            <option value="4">4</option>
+            {[...Array(10).keys()].map((_, index) => (
+              <option key={index} value={index + 1}>
+                {index + 1}
+              </option>
+            ))}
           </select>
         </div> */}
-        {/* Dodajemy pole "Użyj tylko wybranych składników" */}
         <div className="use-only-selected-container">
           <label htmlFor="use-only-selected">Użyj tylko wybranych składników:</label>
           <input
