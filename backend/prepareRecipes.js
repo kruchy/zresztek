@@ -93,34 +93,40 @@ module.exports = async function prepareRecipesHandler(req, res) {
     let choices;
     if (isProduction) {
       let array = [];
-      for(let i = 0; i < numCompletions; i++) {
+      for (let i = 0; i < numCompletions; i++) {
         array.push(createChatCompletion(messages, options));
-    }
+      }
       const responses = await Promise.all(array);
-      choices = [].concat(...responses.map(response => JSON.parse(response[0].message.content)));
+      choices = await Promise.all([].concat(...responses.map(response => JSON.parse(response[0].message.content))).map(async (choice) => {
+        const recipe = choice.recipe;
+        const title = choice.title;
+        const ingredients = choice.ingredients;
+        let image = await createImage(choice.imagePrompt);
+        return {
+          title,
+          recipe,
+          ingredients,
+          image,
+        };
+      }));
     } else {
       let recipe = devResponse.choices[0].message.content
-      choices = [].concat(recipe);
+      choices = [].concat(recipe).map((choice) => {
+        const recipe = choice.recipe;
+        const title = choice.title;
+        const ingredients = choice.ingredients;
+        let image = "https://img.freepik.com/free-photo/chicken-wings-barbecue-sweetly-sour-sauce-picnic-summer-menu-tasty-food-top-view-flat-lay_2829-6471.jpg?w=512"
+        return {
+          title,
+          recipe,
+          ingredients,
+          image,
+        };
+      })
     }
-
-    const resultResponse = choices
-
-    const generatedRecipesPromises = resultResponse.map(async (choice) => {
-      const recipe = choice.recipe;
-      const title = choice.title;
-      const ingredients = choice.ingredients;
-      const image = await createImage(choice.imagePrompt);
-      return {
-        title,
-        recipe,
-        ingredients,
-        image,
-      };
-    });
-    
-    const generatedRecipes = await Promise.all(generatedRecipesPromises);
-    console.log(JSON.stringify(generatedRecipes))
-    res.status(200).json(generatedRecipes);
+   
+    console.log(JSON.stringify(choices))
+    res.status(200).json(choices);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to generate recipes" });
