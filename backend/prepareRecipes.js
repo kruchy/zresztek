@@ -82,22 +82,10 @@ module.exports = async function prepareRecipesHandler(req, res) {
       max_tokens: 5000,
       n: 1,
     };
-    let numCompletions;
-    if (ingredients.length < 5) {
-      numCompletions = 2;
-    } else if (ingredients.length < 9) {
-      numCompletions = 3;
-    } else {
-      numCompletions = 4;
-    }
-    let choices;
     if (isProduction) {
-      let array = [];
-      for (let i = 0; i < numCompletions; i++) {
-        array.push(createChatCompletion(messages, options));
-      }
-      const responses = await Promise.all(array);
-      choices = await Promise.all([].concat(...responses.map(response => JSON.parse(response[0].message.content))).map(async (choice) => {
+        
+      const responses = await createChatCompletion(messages, options);
+      choices = await Promise.all([].concat(...JSON.parse(responses[0].message.content)).map(async (choice) => {
         const recipe = choice.recipe;
         const title = choice.title;
         const ingredients = choice.ingredients;
@@ -124,7 +112,7 @@ module.exports = async function prepareRecipesHandler(req, res) {
         };
       })
     }
-   
+    
     console.log(JSON.stringify(choices))
     res.status(200).json(choices);
   } catch (error) {
