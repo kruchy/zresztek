@@ -43,6 +43,10 @@ function App() {
         setError("Wystąpił chwilowy błąd. Spróbuj ponownie później.");
         eventSource.close();
       };
+      eventSource.addEventListener('DONE', function(event) {
+        console.log('DONE event received');
+        eventSource.close();
+      });
       eventSource.onmessage = (event) => {
         try {
           console.log("Received event:", event);
