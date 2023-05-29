@@ -19,7 +19,6 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
     tempIngredientsStorage[req.ip] = { ingredients, useOnlySelected };
 
     // Send a success response
-    console.log(tempIngredientsStorage)
     res.status(200).json({ message: "Ingredients received" });
 
 

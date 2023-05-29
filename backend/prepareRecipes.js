@@ -101,7 +101,6 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
             try {
               const parsed = JSON.parse(message);
               if (parsed.choices[0].delta.content) {
-                console.log(parsed.choices[0].delta.content);
                 res.write(`data: ${JSON.stringify(parsed.choices[0].delta.content)}\n\n`);
               }
             } catch (error) {
