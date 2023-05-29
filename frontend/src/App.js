@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import knownIngredients from "./ingredients";
-import CircularProgress from "@mui/material/CircularProgress";
 
 const StyledAutocomplete = (props) => (
   <Autocomplete className="styled-autocomplete" {...props} />
@@ -22,51 +21,41 @@ function App() {
   const [ingredients, setIngredients] = useState([]);
   const [recipes, setRecipes] = useState([]);
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [timer, setTimer] = useState(0);
   const [lastSearchedIngredients, setLastSearchedIngredients] = useState([]);
-  const [recipesNumber, setRecipesNumber] = useState(3);
   const [useOnlySelected, setUseOnlySelected] = useState(false);
 
-  const startTimer = () => {
-    return setInterval(() => {
-      setTimer((prevTimer) => prevTimer + 1);
-    }, 1000);
-  };
-
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => setError(null), 10000);
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
-
   const handleSearchRecipes = async () => {
-    setLoading(true);
-    setLastSearchedIngredients(ingredients);
-    const timerInterval = startTimer();
     try {
+      setLastSearchedIngredients(ingredients);
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/prepareRecipes`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ingredients, recipesNumber, useOnlySelected }),
+        body: JSON.stringify({ ingredients, useOnlySelected }),
       });
+      console.log(response.status)
+      console.log("got response from GET")
+      const eventSource = new EventSource(`${process.env.REACT_APP_API_PATH}/prepareRecipes`);
 
-      if (!response.ok) {
-        throw new Error("Failed to generate recipes");
-      }
-
-      const data = await response.json();
-      setRecipes(data);
+      eventSource.onerror = (error) => {
+        console.error('EventSource failed:', error);
+        setError("Wystąpił chwilowy błąd. Spróbuj ponownie później.");
+        eventSource.close();
+      };
+      eventSource.onmessage = (event) => {
+        try {
+          console.log("Received event:", event);
+          const data = JSON.parse(event.data);
+          console.log("Parsed data:", data);
+          setRecipes(prevRecipes => [...prevRecipes, data.replace("\\n","<br />")]);
+        } catch (error) {
+          console.error("Failed to parse event data:", error);
+        }
+      };
     } catch (error) {
-      console.error(error);
       setError("Wystąpił chwilowy błąd. Spróbuj ponownie później.");
-    } finally {
-      setLoading(false);
-      clearInterval(timerInterval);
-      setTimer(0);
+      console.error(error);
     }
   };
 
@@ -95,20 +84,6 @@ function App() {
         <button onClick={handleSearchRecipes}>Szukaj przepisów</button>
       </div>
       <div className="recipes-customization-container">
-         {/* <div className="recipes-number-container">
-          <label htmlFor="recipes-number">Wybór liczby przepisów:</label>
-          <select
-            id="recipes-number"
-            value={recipesNumber}
-            onChange={(event) => setRecipesNumber(Number(event.target.value))}
-          >
-            {[...Array(10).keys()].map((_, index) => (
-              <option key={index} value={index + 1}>
-                {index + 1}
-              </option>
-            ))}
-          </select>
-        </div> */}
         <div className="use-only-selected-container">
           <label htmlFor="use-only-selected">Użyj tylko wybranych składników:</label>
           <input
@@ -132,40 +107,9 @@ function App() {
           </div>
         </div>
       )}
-      {loading && (
-        <div className="spinner-container">
-          <CircularProgress />
-          <div className="timer" >
-            Czas oczekiwania: {timer} sekund
-          </div>
-          {timer >= 20 && (
-            <div className="wait-message" >
-              Trwa generowanie przepisów, to może chwilkę potrwać!
-            </div>
-          )}
-        </div>
-      )}
+  
       <div className="recipes-container" >
-        {recipes.map((recipe, index) => (
-          <div key={index} className="recipe" >
-            <div>
-              <h2>{recipe.title}</h2>
-              {recipe.image && <img src={recipe.image} alt={recipe.title} className="image" />}
-              <div>
-                {recipe.recipe.map((step, stepIndex) => (
-                  <p key={stepIndex}>{step}</p>
-                ))}
-              </div>
-              <ul>
-                {recipe.ingredients.map((ingredient, i) => (
-                  <li key={i}>
-                    {ingredient.ingredient}: {ingredient.quantity}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        ))}
+        <pre className="recipe">{recipes}</pre>
       </div>
     </div>
   );

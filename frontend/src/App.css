@@ -83,21 +83,6 @@ button:hover {
   justify-content: space-between;
 }
 
-.recipe {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px;
-  max-width: 400px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 15px;
-  background-color: white;
-  box-sizing: border-box;
-}
-
-
-
 /* Dla ekranów o szerokości 768px lub mniejszych */
 @media (max-width: 768px) {
   .search-container {
@@ -121,45 +106,25 @@ button:hover {
     padding: 10px;
   }
 
-  /* Skalowanie tekstu */
-  .recipe h2 {
-    font-size: 18px;
-  }
-  .recipe p,
-  .recipe ul li {
-    font-size: 12px;
-  }
+ 
 }
 
 
-.recipe {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 10px;
-  max-width: 400px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 15px;
-  background-color: white;
-  box-sizing: border-box;
-}
 
 @media (min-width: 769px) {
   .recipe {
-    width: calc(33.333% - 20px);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .recipe {
-    width: calc(50% - 20px);
   }
 }
 
 @media (max-width: 768px) {
   .recipe {
-    width: 100%;
   }
 }
 
@@ -181,8 +146,7 @@ button:hover {
 }
 
 .recipe {
-  display: flex;
-  flex-direction: column;
+  white-space: pre-wrap;
   align-items: center;
   margin: 10px;
   max-width: 400px;
