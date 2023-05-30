@@ -56,9 +56,10 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
 
 
     const prompt = Buffer.from(process.env.SINGLE_RECIPE_PROMPT, 'base64')
-      .toString("utf-8") 
+      .toString("utf-8")
       .replace("{{spices}}", spices.join(", "))
       .replace("{{useOnlySelected}}", useOnlySelected ? process.env.CONSTANT_INGREDIENTS : process.env.SINGLE_VARYING_INGREDIENTS)
+
     const messages = [
       {
         role: "system",
@@ -91,9 +92,9 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
           for (const line of lines) {
             const message = line.replace(/^data: /, '');
             if (message === '[DONE]') {
-              res.write('event: DONE\ndata:\n\n'); 
+              res.write('event: DONE\ndata:\n\n');
               res.end();
-              return; 
+              return;
             }
             try {
               const parsed = JSON.parse(message);
@@ -123,7 +124,7 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
         }
       }
 
-   
+
     } else {
       let recipe = devResponse.choices[0].message.content
       choices = [].concat(recipe).map((choice) => {
