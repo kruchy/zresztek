@@ -49,10 +49,11 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
     if (!ingredients) {
       res.status(404).end();
     }
-
+      
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
+
 
     const prompt = Buffer.from(process.env.SINGLE_RECIPE_PROMPT, 'base64')
       .toString("utf-8")
