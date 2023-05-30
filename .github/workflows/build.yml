@@ -64,7 +64,7 @@ jobs:
         app: [backend, frontend]
 
     env:
-      backend: --build-arg CONSTANT_INGREDIENTS=${{ secrets.CONSTANT_INGREDIENTS }} --build-arg SINGLE_VARYING_INGREDIENTS=${{ secrets.SINGLE_VARYING_INGREDIENTS }} --build-arg SINGLE_RECIPE_PROMPT=${{ secrets.SINGLE_RECIPE_PROMPT }} --build-arg OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }} --build-arg PORT=${{ vars.PORT }}
+      backend: --build-arg CONSTANT_INGREDIENTS="${{ secrets.CONSTANT_INGREDIENTS }}" --build-arg SINGLE_VARYING_INGREDIENTS="${{ secrets.SINGLE_VARYING_INGREDIENTS }}" --build-arg SINGLE_RECIPE_PROMPT="${{ secrets.SINGLE_RECIPE_PROMPT }}" --build-arg OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" --build-arg PORT="${{ vars.PORT }}"
       frontend: 
 
     steps:
