@@ -84,6 +84,6 @@ jobs:
       run: |
         cd ${{ matrix.app }}
         IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}:${{ github.sha }}
-        DOCKER_BUILD_ARGS="${{ env[matrix.app] }}"
+        DOCKER_BUILD_ARGS=`${{ env[matrix.app] }}`
         docker build -t $IMAGE_NAME . $DOCKER_BUILD_ARGS
         docker push $IMAGE_NAME
