@@ -26,6 +26,8 @@ function App() {
 
   const handleSearchRecipes = async () => {
     try {
+      setRecipes([])
+      setError(null)
       setLastSearchedIngredients(ingredients);
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/prepareRecipes`, {
         method: "POST",
@@ -52,7 +54,7 @@ function App() {
           console.log("Received event:", event);
           const data = JSON.parse(event.data);
           console.log("Parsed data:", data);
-          setRecipes(prevRecipes => [...prevRecipes, data.replace("\\n","<br />")]);
+          setRecipes(prevRecipes => [...prevRecipes, data]);
         } catch (error) {
           console.error("Failed to parse event data:", error);
         }
