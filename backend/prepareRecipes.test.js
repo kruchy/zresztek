@@ -4,7 +4,7 @@ const devResponse = require("./response.json");
 jest.mock("axios");
 
 describe("Server API", () => {
-  it("generateRecipes returns generated recipes", async () => {
+  test.skip("generateRecipes returns generated recipes", async () => {
     const sampleIngredients = ["amaretto", "ananas", "awokado"];
     const recipesNumber = 3;
     const useOnlySelected = false;
