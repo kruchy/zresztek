@@ -4,7 +4,7 @@ services:
     image: zresztek-frontend
     container_name: zresztek-frontend
     restart: unless-stopped
-    build: 
+    build:
       context: ./frontend
       args:
         REACT_APP_API_PATH: "${API_PATH}"
@@ -19,13 +19,15 @@ services:
     image: zresztek-backend
     container_name: zresztek-backend
     restart: unless-stopped
-    build: 
+    build:
       context: ./backend
       args:
         PORT: "${API_PORT}"
     environment:
       PORT: "${API_PORT}"
-      RECIPE_PROMPT: "${RECIPE_PROMPT}"
+      CONSTANT_INGREDIENTS: "${CONSTANT_INGREDIENTS}"
+      SINGLE_VARYING_INGREDIENTS: "${SINGLE_VARYING_INGREDIENTS}"
+      SINGLE_RECIPE_PROMPT: "${SINGLE_RECIPE_PROMPT}"
       OPENAI_API_KEY: "${OPENAI_API_KEY}"
       GIT_LAST_COMMIT_SHA: "${GIT_LAST_COMMIT_SHA}"
       DEPLOY_TIME: "${DEPLOY_TIME}"
@@ -34,7 +36,6 @@ services:
       - "4000:${API_PORT}"
     networks:
       - nginx-proxy
-
 
 networks:
   nginx-proxy:
