@@ -64,8 +64,11 @@ jobs:
         app: [backend, frontend]
 
     env:
-      backend: --build-arg CONSTANT_INGREDIENTS="${{ secrets.CONSTANT_INGREDIENTS }}" --build-arg SINGLE_VARYING_INGREDIENTS="${{ secrets.SINGLE_VARYING_INGREDIENTS }}" --build-arg SINGLE_RECIPE_PROMPT="${{ secrets.SINGLE_RECIPE_PROMPT }}" --build-arg OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" --build-arg PORT=${{ vars.PORT }}
-      frontend: 
+      BACKEND_CONSTANT_INGREDIENTS: ${{ secrets.CONSTANT_INGREDIENTS }}
+      BACKEND_SINGLE_VARYING_INGREDIENTS: ${{ secrets.SINGLE_VARYING_INGREDIENTS }}
+      BACKEND_SINGLE_RECIPE_PROMPT: ${{ secrets.SINGLE_RECIPE_PROMPT }}
+      BACKEND_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      BACKEND_PORT: ${{ vars.PORT }}
 
     steps:
     - name: Checkout repository
@@ -84,6 +87,9 @@ jobs:
       run: |
         cd ${{ matrix.app }}
         IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${{ matrix.app }}:${{ github.sha }}
-        DOCKER_BUILD_ARGS=${{ env[matrix.app] }}
+        DOCKER_BUILD_ARGS=""
+        if [ "${{ matrix.app }}" = "backend" ]; then
+          DOCKER_BUILD_ARGS="--build-arg CONSTANT_INGREDIENTS=\"$BACKEND_CONSTANT_INGREDIENTS\" --build-arg SINGLE_VARYING_INGREDIENTS=\"$BACKEND_SINGLE_VARYING_INGREDIENTS\" --build-arg SINGLE_RECIPE_PROMPT=\"$BACKEND_SINGLE_RECIPE_PROMPT\" --build-arg OPENAI_API_KEY=\"$BACKEND_OPENAI_API_KEY\" --build-arg PORT=\"$BACKEND_PORT\""
+        fi
         docker build -t $IMAGE_NAME . $DOCKER_BUILD_ARGS
         docker push $IMAGE_NAME
