@@ -36,10 +36,6 @@ async function createImage(message) {
       size: "512x512",
       response_format: "url",
     });
-    console.log(message)
-    // console.log(response)
-
-    console.log(response.data)
     return stream.data.data[0].url;
   } catch (error) {
     console.error("Error creating chat completion:", error);
