@@ -55,10 +55,10 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
     res.setHeader('Connection', 'keep-alive');
 
 
-    const prompt = process.env.SINGLE_RECIPE_PROMPT
+    const prompt = Buffer.from(process.env.SINGLE_RECIPE_PROMPT, 'base64')
+      .toString("utf-8") 
       .replace("{{spices}}", spices.join(", "))
       .replace("{{useOnlySelected}}", useOnlySelected ? process.env.CONSTANT_INGREDIENTS : process.env.SINGLE_VARYING_INGREDIENTS)
-
     const messages = [
       {
         role: "system",
@@ -73,7 +73,7 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
       n: 1,
       stream: true,
     };
-    
+
     req.on('error', (e) => {
       console.error("problem with request:" + e.message);
     });
