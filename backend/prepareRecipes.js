@@ -94,9 +94,9 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
           for (const line of lines) {
             const message = line.replace(/^data: /, '');
             if (message === '[DONE]') {
-              res.write('event: DONE\ndata:\n\n'); // Signal client to close connection
+              res.write('event: DONE\ndata:\n\n'); 
               res.end();
-              return; // Stream finished
+              return; 
             }
             try {
               const parsed = JSON.parse(message);
