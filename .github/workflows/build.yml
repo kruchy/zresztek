@@ -91,7 +91,7 @@ jobs:
       id: docker_build_backend
       if: needs.path-filter.outputs['backend'] == 'true'
       with:
-        file: dockerfiles/api/Dockerfile
+        file: backend/Dockerfile
         context: ./
         push: true
         builder: ${{ steps.buildx.outputs.name }}
@@ -109,7 +109,7 @@ jobs:
       id: docker_build_frontend
       if: needs.path-filter.outputs['frontend'] == 'true'
       with:
-        file: dockerfiles/api/Dockerfile
+        file: frontend/Dockerfile
         context: ./
         push: true
         builder: ${{ steps.buildx.outputs.name }}
