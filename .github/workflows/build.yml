@@ -92,7 +92,7 @@ jobs:
       if: needs.path-filter.outputs['backend'] == 'true'
       with:
         file: backend/Dockerfile
-        context: ./
+        context: ./backend
         push: true
         builder: ${{ steps.buildx.outputs.name }}
         build-args: |
@@ -110,7 +110,7 @@ jobs:
       if: needs.path-filter.outputs['frontend'] == 'true'
       with:
         file: frontend/Dockerfile
-        context: ./
+        context: ./frontend
         push: true
         builder: ${{ steps.buildx.outputs.name }}
         tags: |
