@@ -36,6 +36,7 @@ function App() {
         },
         body: JSON.stringify({ ingredients, useOnlySelected }),
       });
+      
       const eventSource = new EventSource(`${process.env.REACT_APP_API_PATH}/prepareRecipes`);
 
       eventSource.onerror = (error) => {
