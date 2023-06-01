@@ -36,8 +36,6 @@ function App() {
         },
         body: JSON.stringify({ ingredients, useOnlySelected }),
       });
-      console.log(response.status)
-      console.log("got response from GET")
       const eventSource = new EventSource(`${process.env.REACT_APP_API_PATH}/prepareRecipes`);
 
       eventSource.onerror = (error) => {
