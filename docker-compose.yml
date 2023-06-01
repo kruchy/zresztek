@@ -12,12 +12,15 @@ services:
       - nginx-proxy
 
   backend:
-    image: ghcr.io/kruchy/zresztek-backend:latest
+    image: zghcr.io/kruchy/zresztek-backend:latest
     container_name: zresztek-backend
     restart: unless-stopped
     build:
       context: ./backend
+      args:
+        PORT: "${API_PORT}"
     environment:
+      PORT: "${API_PORT}"
       NODE_ENV: "production"
     ports:
       - "4000:${API_PORT}"
