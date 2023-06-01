@@ -80,7 +80,7 @@ jobs:
       with:
         registry: ghcr.io
         username: ${{ github.actor }}
-        password: " "
+        password: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Docker Buildx
       id: buildx
@@ -106,7 +106,7 @@ jobs:
           ghcr.io/${{ github.repository_owner }}/backend:latest
     
     - name: Build Docker Image - Frontend
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v2
       id: docker_build_frontend
       if: needs.path-filter.outputs['frontend'] == 'true'
       with:
