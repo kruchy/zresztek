@@ -3,7 +3,7 @@ FROM node:18-alpine AS build
 ARG REACT_APP_API_PATH
 ENV REACT_APP_API_PATH=${REACT_APP_API_PATH}
 
-ENV NODE_ENV=production
+ENV NODE_ENV="production"
 
 WORKDIR /app
 
