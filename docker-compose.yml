@@ -12,7 +12,7 @@ services:
       - nginx-proxy
 
   backend:
-    image: zghcr.io/kruchy/zresztek-backend:latest
+    image: ghcr.io/kruchy/zresztek-backend:latest
     container_name: zresztek-backend
     restart: unless-stopped
     build:
