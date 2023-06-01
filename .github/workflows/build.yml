@@ -61,13 +61,6 @@ jobs:
     runs-on: ubuntu-latest
     if: needs.path-filter.outputs.backend == 'true'
 
-    env:
-      BACKEND_CONSTANT_INGREDIENTS: ${{ secrets.CONSTANT_INGREDIENTS }}
-      BACKEND_SINGLE_VARYING_INGREDIENTS: ${{ secrets.SINGLE_VARYING_INGREDIENTS }}
-      BACKEND_SINGLE_RECIPE_PROMPT: ${{ secrets.SINGLE_RECIPE_PROMPT }}
-      BACKEND_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-      BACKEND_PORT: ${{ vars.PORT }}
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
@@ -130,6 +123,8 @@ jobs:
         context: ./frontend
         push: true
         builder: ${{ steps.buildx.outputs.name }}
+        build-args: |
+          REACT_APP_API_PATH: ${{ secrets.REACT_APP_API_PATH }}
         tags: |
           ghcr.io/${{ github.repository_owner }}/zresztek-frontend:${{ github.sha }}   
           ghcr.io/${{ github.repository_owner }}/zresztek-frontend:latest
