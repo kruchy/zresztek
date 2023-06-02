@@ -1,2 +1,2 @@
 docker-compose pull  
-docker-compose up -d --build --env-file .env
+docker-compose up -d --build 
