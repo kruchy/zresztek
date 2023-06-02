@@ -4,8 +4,10 @@ services:
     image: ghcr.io/kruchy/zresztek-frontend:latest
     container_name: zresztek-frontend
     restart: unless-stopped
-    environment:
-      REACT_APP_API_PATH: ${REACT_APP_API_PATH}
+    build:
+      context: ./frontend
+      args:
+        REACT_APP_API_PATH: ${REACT_APP_API_PATH}
     ports:
       - "80:80"
     networks:
