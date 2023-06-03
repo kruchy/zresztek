@@ -36,7 +36,7 @@ function App() {
         },
         body: JSON.stringify({ ingredients, useOnlySelected }),
       });
-      
+
       const eventSource = new EventSource(`${process.env.REACT_APP_API_PATH}/prepareRecipes`);
 
       eventSource.onerror = (error) => {
@@ -44,7 +44,7 @@ function App() {
         setError("Wystąpił chwilowy błąd. Spróbuj ponownie później.");
         eventSource.close();
       };
-      eventSource.addEventListener('DONE', function(event) {
+      eventSource.addEventListener('DONE', function (event) {
         console.log('DONE event received');
         eventSource.close();
       });
@@ -112,10 +112,10 @@ function App() {
           </div>
         </div>
       )}
-  
-      <div className="recipes-container" >
+
+      {recipes.length > 0(<div className="recipes-container" >
         <pre className="recipe">{recipes}</pre>
-      </div>
+      </div>)}
     </div>
   );
 }
