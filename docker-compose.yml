@@ -1,7 +1,8 @@
 version: "3.9"
 services:
   frontend:
-    image: ghcr.io/kruchy/zresztek-frontend:latest
+    # image: ghcr.io/kruchy/zresztek-frontend:latest
+    image: zresztek-frontend
     container_name: zresztek-frontend
     restart: unless-stopped
     build:
@@ -14,13 +15,20 @@ services:
       - nginx-proxy
 
   backend:
-    image: ghcr.io/kruchy/zresztek-backend:latest
+    # image: ghcr.io/kruchy/zresztek-backend:latest
+    image: zresztek-backend
     container_name: zresztek-backend
     restart: unless-stopped
     build:
       context: ./backend
       args:
         PORT: "${API_PORT}"
+        CONSTANT_INGREDIENTS: "${CONSTANT_INGREDIENTS}"
+        SINGLE_VARYING_INGREDIENTS: "${SINGLE_VARYING_INGREDIENTS}"
+        SINGLE_RECIPE_PROMPT: "${SINGLE_RECIPE_PROMPT}"
+        OPENAI_API_KEY: "${OPENAI_API_KEY}"
+        GIT_LAST_COMMIT_SHA: "${GIT_LAST_COMMIT_SHA}"
+        DEPLOY_TIME: "${DEPLOY_TIME}"
     environment:
       PORT: "${API_PORT}"
       CONSTANT_INGREDIENTS: "${CONSTANT_INGREDIENTS}"
