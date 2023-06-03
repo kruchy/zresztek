@@ -113,7 +113,7 @@ function App() {
         </div>
       )}
 
-      {recipes.length > 0(<div className="recipes-container" >
+      {recipes.length > 0 && (<div className="recipes-container" >
         <pre className="recipe">{recipes}</pre>
       </div>)}
     </div>
