@@ -12,7 +12,7 @@ RUN npm ci
 
 COPY . .
 
-RUN echo $REACT_APP_API_PATH && npm run build
+RUN npm run build
 
 FROM nginx:stable-alpine
 
