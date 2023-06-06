@@ -99,14 +99,12 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
             }
             const parsed = JSON.parse(message);
             const content = parsed.choices[0].delta.content
-            console.log(content)
             if (!hasParsedTitle && content && content.includes("@")) {
               hasParsedTitle = true;
               parsedTitle += content;
               console.log("parsedTitle", parsedTitle)
               parsedTitle = parsedTitle.replace("@", "");
               const imageUrl = await createImage(parsedTitle);
-              console.log(imageUrl)
               res.write(`event: image\ndata: ${JSON.stringify(imageUrl)}\n\n`);
 
             }
