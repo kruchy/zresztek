@@ -20,6 +20,7 @@ const Logo = () => (
 function App() {
   const [ingredients, setIngredients] = useState([]);
   const [recipes, setRecipes] = useState([]);
+  const [image, setImage] = useState(null);
   const [error, setError] = useState(null);
   const [lastSearchedIngredients, setLastSearchedIngredients] = useState([]);
   const [useOnlySelected, setUseOnlySelected] = useState(false);
@@ -27,6 +28,7 @@ function App() {
   const handleSearchRecipes = async () => {
     try {
       setRecipes([])
+      setImage(null)
       setError(null)
       setLastSearchedIngredients(ingredients);
       const response = await fetch(`${process.env.REACT_APP_API_PATH}/prepareRecipes`, {
@@ -47,6 +49,11 @@ function App() {
       eventSource.addEventListener('DONE', function (event) {
         console.log('DONE event received');
         eventSource.close();
+      });
+      eventSource.addEventListener('image', function (event) {
+        console.log("Received event:", event);
+        const data = JSON.parse(event.data);
+        setImage(data)
       });
       eventSource.onmessage = (event) => {
         try {
@@ -112,12 +119,14 @@ function App() {
           </div>
         </div>
       )}
-
       {recipes.length > 0 && (<div className="recipes-container" >
+        {image != null && <img className="image" src={image} alt={"Recipe image"} />}
         <pre className="recipe">{recipes}</pre>
       </div>)}
     </div>
   );
 }
+
+
 
 export default App;

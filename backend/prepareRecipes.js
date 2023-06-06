@@ -36,7 +36,7 @@ async function createImage(message) {
       size: "512x512",
       response_format: "url",
     });
-    return stream.data.data[0].url;
+    return response.data.data[0].url;
   } catch (error) {
     console.error("Error creating chat completion:", error);
   }
@@ -49,7 +49,7 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
     if (!ingredients) {
       res.status(404).end();
     }
-    
+
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
@@ -80,13 +80,15 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
 
 
     if (isProduction) {
+      let hasParsedTitle = false;
+      let parsedTitle = "";
       try {
         const response = await createChatCompletion(messages, options);
 
         req.on('close', () => {
           res.end();
         });
-        response.data.on('data', data => {
+        response.data.on('data', async data => {
           const lines = data.toString().split('\n').filter(line => line.trim() !== '');
           for (const line of lines) {
             const message = line.replace(/^data: /, '');
@@ -95,13 +97,31 @@ module.exports = async function prepareRecipesHandler(req, res, tempIngredientsS
               res.end();
               return;
             }
-            try {
-              const parsed = JSON.parse(message);
-              if (parsed.choices[0].delta.content) {
-                res.write(`data: ${JSON.stringify(parsed.choices[0].delta.content)}\n\n`);
+            const parsed = JSON.parse(message);
+            const content = parsed.choices[0].delta.content
+            console.log(content)
+            if (!hasParsedTitle && content && content.includes("@")) {
+              hasParsedTitle = true;
+              parsedTitle += content;
+              console.log("parsedTitle", parsedTitle)
+              parsedTitle = parsedTitle.replace("@", "");
+              const imageUrl = await createImage(parsedTitle);
+              console.log(imageUrl)
+              res.write(`event: image\ndata: ${JSON.stringify(imageUrl)}\n\n`);
+
+            }
+            if (!hasParsedTitle && content) {
+                parsedTitle += content;
+            }
+            
+            else if (hasParsedTitle) {
+              try {
+                if (content) {
+                  res.write(`data: ${JSON.stringify(content)}\n\n`);
+                }
+              } catch (error) {
+                console.error('Could not JSON parse stream message', message, error);
               }
-            } catch (error) {
-              console.error('Could not JSON parse stream message', message, error);
             }
           }
         });

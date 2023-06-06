@@ -83,7 +83,6 @@ button:hover {
   justify-content: space-between;
 }
 
-/* Dla ekranów o szerokości 768px lub mniejszych */
 @media (max-width: 768px) {
   .search-container {
     flex-direction: column;
@@ -93,23 +92,10 @@ button:hover {
     margin-top: 20px;
   }
 
-  .recipes-container {
-    flex-direction: column;
-  }
-
   .Logo {
     height: 100px;
   }
-
-  .recipe {
-    margin: 5px;
-    padding: 10px;
-  }
-
- 
 }
-
-
 
 @media (min-width: 769px) {
   .recipe {
@@ -120,11 +106,17 @@ button:hover {
 
 @media (min-width: 769px) and (max-width: 1024px) {
   .recipe {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
   }
 }
 
 @media (max-width: 768px) {
   .recipe {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    margin: 5px;
+    padding: 10px;
   }
 }
 
@@ -138,10 +130,8 @@ button:hover {
 
 .recipes-container {
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  align-items: center; 
   padding: 20px;
 }
 
